@@ -11,6 +11,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <title>FRC 2027 Regionals Map</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.css">
 <style>
 :root{
   --glass:rgba(255,255,255,.82); --glass-b:rgba(0,0,0,.08); --ink:#1c1c1e; --ink2:#6b6b70;
@@ -35,6 +36,12 @@ html,body{height:100%;height:100dvh;overflow:hidden;overscroll-behavior:none;mar
 .chip{flex:none;border:1px solid var(--glass-b);background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
   color:var(--ink);font-weight:600;font-size:13px;line-height:1;font-family:inherit;padding:8px 13px;border-radius:999px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12)}
 .chip[aria-pressed=true]{background:var(--accent);color:#fff;border-color:transparent}
+.chip.wk{display:inline-flex;align-items:center;gap:6px}
+.chip.wk .sw{width:10px;height:10px;border-radius:50%;background:var(--wc);box-shadow:0 0 0 1.5px rgba(0,0,0,.35)}
+.chip.wk[aria-pressed=true]{background:var(--wc);color:var(--wt)}
+.chip.wk[aria-pressed=true] .sw{box-shadow:0 0 0 1.5px currentColor}
+.dot{background:none;border:0}
+.dot svg{display:block;overflow:visible;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
 #ctl{position:absolute;z-index:800;right:calc(12px + env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;align-items:center}
 .grp{border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
 .grp button,.solo{width:44px;height:44px;border:0;background:transparent;color:var(--ink);font-size:24px;line-height:1;cursor:pointer;display:grid;place-items:center;font-family:inherit}
@@ -76,7 +83,15 @@ dt{color:var(--ink2)}dd{margin:0;font-variant-numeric:tabular-nums;text-align:ri
 .act.p{background:var(--accent);color:#fff}
 .act.on{background:#ffcc00;color:#3a2f00}
 .b.fv{background:#ffcc00;color:#3a2f00}
+.chip.fav{display:inline-flex;align-items:center;gap:6px}
 .chip.fav[aria-pressed=true]{background:#ffcc00;color:#3a2f00}
+.chip.fav[aria-pressed=true] .ico polygon{fill:#3a2f00;stroke:#3a2f00}
+.ico{width:15px;height:15px;flex:none;vertical-align:-2px}
+.act .ico{width:16px;height:16px;vertical-align:-3px;margin-right:3px}
+.b.fv .ico{width:13px;height:13px;vertical-align:-2px}
+.pbtn .st{width:13px;height:13px;vertical-align:-1px}
+.b.fv .ico polygon,.act.on .ico polygon{fill:#3a2f00;stroke:#3a2f00}
+.leaflet-container .maplibregl-canvas{outline:none}
 .note{margin-top:14px;font-size:11.5px;color:var(--ink2);line-height:1.4}
 .leaflet-interactive{cursor:pointer}
 </style>
@@ -102,6 +117,8 @@ dt{color:var(--ink2)}dd{margin:0;font-variant-numeric:tabular-nums;text-align:ri
 <section id="sheet" aria-live="polite"></section>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@maplibre/maplibre-gl-leaflet@0.1.1/leaflet-maplibre-gl.js"></script>
 <script>
 // [code, name, city, state, country, week, dates(2027), team capacity, lat, lng]
 // Built-in copy of the list. events.json (kept fresh by the sync job) replaces it as soon as it loads.
@@ -186,7 +203,18 @@ const map=L.map("map",{zoomControl:false,minZoom:2,maxZoom:20,worldCopyJump:true
   maxBounds:[[-85,-540],[85,540]],maxBoundsViscosity:.6}).setView([30,10],2.4);
 
 const esri=(k,o)=>L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/"+k+"/MapServer/tile/{z}/{y}/{x}",Object.assign({maxZoom:20,maxNativeZoom:19,attribution:"Tiles © Esri, HERE, Garmin, OpenStreetMap contributors"},o||{}));
-const street=esri("World_Street_Map");
+// Street map: OpenFreeMap vector tiles drawn with MapLibre. They stay sharp at any zoom and cover the whole world,
+// including places where Esri's street tiles are blank. If the phone or browser has no WebGL, plain OpenStreetMap tiles are used.
+function makeStreet(){
+  try{
+    const c=document.createElement("canvas");
+    if(window.maplibregl&&L.maplibreGL&&(c.getContext("webgl2")||c.getContext("webgl")))
+      return L.maplibreGL({style:"https://tiles.openfreemap.org/styles/liberty",
+        attribution:'<a href="https://openfreemap.org">OpenFreeMap</a> © <a href="https://www.openmaptiles.org/">OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'});
+  }catch(e){}
+  return L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:20,maxNativeZoom:19,attribution:"© OpenStreetMap contributors"});
+}
+const street=makeStreet();
 const sat=L.layerGroup([esri("World_Imagery"),esri("Reference/World_Boundaries_and_Places",{maxNativeZoom:18})]);
 let isSat=false;street.addTo(map);
 $("layer").onclick=()=>{
@@ -203,31 +231,69 @@ function group(){
 }
 group();
 const layer=L.layerGroup().addTo(map);
-let weekFilter="all";
-const visible=()=>E.filter(e=>weekFilter==="all"||(weekFilter==="fav"?favs.has(e.code):e.week===+weekFilter));
+// Filters: any number of weeks can be on at once (tap a week again to turn it off).
+// "Favourites" is a separate switch and narrows whatever weeks are on. Nothing on = show everything.
+const weeksOn=new Set();
+let favOnly=false;
+const visible=()=>E.filter(e=>(!weeksOn.size||weeksOn.has(e.week))&&(!favOnly||favs.has(e.code)));
+const filterLabel=()=>{
+  const p=[];
+  if(weeksOn.size)p.push((weeksOn.size>1?"weeks ":"week ")+[...weeksOn].sort((a,b)=>a-b).join(", "));
+  if(favOnly)p.push("favourites");
+  return p.length?p.join(" · "):"Mar–Apr 2027";
+};
 const RING=getComputedStyle(document.documentElement).getPropertyValue("--dot-ring").trim();
 function place(e){
   if(e.n<2)return[e.lat,e.lng];
   const a=2*Math.PI*e.i/e.n-Math.PI/2,r=e.n>2?13:9,p=map.project([e.lat,e.lng]).add([Math.cos(a)*r,Math.sin(a)*r]);
   return map.unproject(p);
 }
+// Dot colours. White by default. Once one or more weeks are switched on, each dot takes its week's colour.
+// A favourite is gold; in week-colour mode it is split down the middle: week colour on the left, gold on the right.
+function starPts(cx,cy,R,r){          // 5-point star, one point straight up
+  let p="";for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,d=i%2?r:R;p+=(cx+Math.cos(a)*d).toFixed(2)+","+(cy+Math.sin(a)*d).toFixed(2)+" "}
+  return p.trim();
+}
+const STAR24=starPts(12,12,11,4.6);
+const starIcon=(on,cls)=>'<svg class="'+(cls||"ico")+'" viewBox="0 0 24 24" aria-hidden="true"><polygon points="'+STAR24+'" fill="'+(on?"#ffcc00":"none")+'" stroke="'+(on?"#7a5f00":"currentColor")+'" stroke-width="1.8" stroke-linejoin="round"/></svg>';
+const WEEK_COL={1:"#ff3b30",2:"#ff9500",3:"#ffe600",4:"#34c759",5:"#0a84ff",6:"#5856d6",7:"#af52de"}; // red to violet
+const WEEK_TXT={1:"#fff",2:"#2a1a00",3:"#2a2400",4:"#062b12",5:"#fff",6:"#fff",7:"#fff"};           // text on a lit week chip
+const GOLD="#ffcc00",GOLD_RING="#7a5f00";
+function dotIcon(e){
+  const fav=favs.has(e.code),byWeek=weeksOn.size>0;
+  const base=byWeek?WEEK_COL[e.week]||"#fff":"#fff";
+  if(fav){
+    // Favourite = star. Gold on its own; with weeks on it is split down the middle: week colour left, gold right.
+    const S=32,c=S/2,pts=starPts(c,c+.6,13,5.4),id="h"+e.code.replace(/W/g,"");
+    const body=byWeek
+      ?'<defs><clipPath id="'+id+'"><rect x="0" y="0" width="'+c+'" height="'+S+'"/></clipPath></defs>'+
+       '<polygon points="'+pts+'" fill="'+GOLD+'"/><polygon points="'+pts+'" fill="'+base+'" clip-path="url(#'+id+')"/>'+
+       '<line x1="'+c+'" y1="'+(c-13)+'" x2="'+c+'" y2="'+(c+12)+'" stroke="'+GOLD_RING+'" stroke-width="1.2"/>'+
+       '<polygon points="'+pts+'" fill="none" stroke="'+GOLD_RING+'" stroke-width="2" stroke-linejoin="round"/>'
+      :'<polygon points="'+pts+'" fill="'+GOLD+'" stroke="'+GOLD_RING+'" stroke-width="2" stroke-linejoin="round"/>';
+    return L.divIcon({className:"dot",iconSize:[S,S],iconAnchor:[c,c+.6],popupAnchor:[0,-14],
+      html:'<svg width="'+S+'" height="'+S+'" viewBox="0 0 '+S+' '+S+'" aria-hidden="true">'+body+'</svg>'});
+  }
+  const r=7,S=26,c=S/2;
+  return L.divIcon({className:"dot",iconSize:[S,S],iconAnchor:[c,c],popupAnchor:[0,-r-2],
+    html:'<svg width="'+S+'" height="'+S+'" viewBox="0 0 '+S+' '+S+'" aria-hidden="true"><circle cx="'+c+'" cy="'+c+'" r="'+r+'" fill="'+base+'" stroke="'+RING+'" stroke-width="2"/></svg>'});
+}
 const markers=[];
 function render(){
   layer.clearLayers();markers.length=0;
-  const v=visible().sort((a,b)=>favs.has(a.code)-favs.has(b.code)); // yellow dots drawn last, on top
+  const v=visible();
   v.forEach(e=>{
-    const f=favs.has(e.code);
-    const m=L.circleMarker(place(e),{radius:f?9:7,weight:f?2.5:2,color:f?"#7a5f00":RING,fillColor:f?"#ffcc00":"#fff",fillOpacity:1,bubblingMouseEvents:false}).addTo(layer);
+    const m=L.marker(place(e),{icon:dotIcon(e),zIndexOffset:favs.has(e.code)?1000:0,riseOnHover:true,keyboard:true,title:e.name}).addTo(layer);
     m.ev=e;markers.push(m);
-    m.bindPopup(()=>popupHtml(e),{closeButton:false,offset:[0,-4],autoPanPaddingTopLeft:[20,110],autoPanPaddingBottomRight:[20,20]});
+    m.bindPopup(()=>popupHtml(e),{closeButton:false,autoPanPaddingTopLeft:[20,110],autoPanPaddingBottomRight:[20,20]});
     m.on("popupopen",x=>{x.popup.getElement().querySelector("[data-c]").onclick=()=>openSheet(e.code)});
   });
-  $("count").textContent=v.length+" regional"+(v.length===1?"":"s")+(weekFilter==="all"?" · Mar–Apr 2027":weekFilter==="fav"?" · favourites":" · week "+weekFilter)+(synced?" · synced "+synced:"");
+  $("count").textContent=v.length+" regional"+(v.length===1?"":"s")+" · "+filterLabel()+(synced?" · synced "+synced:"");
 }
 map.on("zoomend",()=>markers.forEach(m=>m.setLatLng(place(m.ev))));
 function popupHtml(e){
   const d=document.createElement("div");
-  d.innerHTML='<div class="pcity">'+esc(e.city)+'</div><button class="pbtn" data-c="'+e.code+'"><span>'+(favs.has(e.code)?'<span class="st">★</span> ':'')+esc(e.name)+'<small>Week '+e.week+' · '+e.dates+' · tap for details</small></span></button>';
+  d.innerHTML='<div class="pcity">'+esc(e.city)+'</div><button class="pbtn" data-c="'+e.code+'"><span>'+(favs.has(e.code)?starIcon(true,"ico st")+' ':'')+esc(e.name)+'<small>Week '+e.week+' · '+e.dates+' · tap for details</small></span></button>';
   return d;
 }
 
@@ -243,7 +309,7 @@ function fillSheet(code){
   $("sheet").innerHTML='<div class="grab"></div>'+
    '<div class="sh-h"><h2>'+esc(e.name)+'</h2><button class="x" id="sx" aria-label="Close">✕</button></div>'+
    '<p class="sub">'+esc(loc)+'</p>'+
-   '<div class="badges"><span class="b">'+e.code+'</span><span class="b">Week '+e.week+'</span><span class="b">Regional</span>'+(f?'<span class="b fv">★ Favourite</span>':'')+'</div>'+
+   '<div class="badges"><span class="b">'+e.code+'</span><span class="b">Week '+e.week+'</span><span class="b">Regional</span>'+(f?'<span class="b fv">'+starIcon(true,"ico")+' Favourite</span>':'')+'</div>'+
    '<dl><dt>Dates</dt><dd>'+e.dates+', 2027</dd>'+
     (e.venue?'<dt>Venue</dt><dd>'+esc(e.venue)+'</dd>'+(e.addr?'<dt>Address</dt><dd>'+esc(e.addr)+'</dd>':''):'')+
     '<dt>City</dt><dd>'+esc(e.city)+'</dd>'+
@@ -251,7 +317,7 @@ function fillSheet(code){
     '<dt>Country</dt><dd>'+esc(e.country)+'</dd>'+
     '<dt>Team capacity</dt><dd>'+(e.cap?e.cap+' teams':'Not announced')+'</dd>'+
     '<dt>'+(e.precise?'Venue location':'City centre')+'</dt><dd>'+e.lat.toFixed(4)+', '+e.lng.toFixed(4)+'</dd></dl>'+
-   '<div class="acts"><button class="act'+(f?' on':'')+'" id="sf" aria-pressed="'+f+'">'+(f?'★ Favourited':'☆ Add to favourites')+'</button>'+
+   '<div class="acts"><button class="act'+(f?' on':'')+'" id="sf" aria-pressed="'+f+'">'+(f?starIcon(true,"ico")+' Favourited':starIcon(false,"ico")+' Add to favourites')+'</button>'+
     '<a class="act p" target="_blank" rel="noopener" href="https://frc-events.firstinspires.org/2027/'+e.code+'">FIRST event page</a>'+
     '<a class="act" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query='+(e.precise?encodeURIComponent(e.venue+' '+e.addr):e.lat+','+e.lng)+'">Open in Maps</a></div>'+
    '<p class="note">'+(e.precise?'The dot is on the venue, taken from the official FIRST event page and matched to a map location.':'FIRST has not listed a venue for this event yet, so the dot is at the centre of '+esc(e.city)+'.')+(e.n>1?' '+e.n+' events share this spot, so their dots are nudged a few pixels apart.':'')+'</p>';
@@ -260,7 +326,7 @@ function fillSheet(code){
   $("sx").onclick=closeSheet;
   $("sf").onclick=()=>{
     f?favs.delete(code):favs.add(code);saveFavs();render();
-    if(weekFilter==="fav"&&f)closeSheet();else fillSheet(code);
+    if(favOnly&&f)closeSheet();else fillSheet(code);
   };
   return e;
 }
@@ -282,12 +348,29 @@ const ml=()=>{const z=map.getZoom();$("zoomlbl").textContent="Zoom "+z.toFixed(1
 map.on("zoom",ml);ml();
 
 const chips=$("chips");
-[["all","All"],["fav","★ Favourites"],[1,"Wk 1"],[2,"Wk 2"],[3,"Wk 3"],[4,"Wk 4"],[5,"Wk 5"],[6,"Wk 6"],[7,"Wk 7"]].forEach(([v,l])=>{
+const chipEls={};
+function syncChips(){
+  chipEls.all.setAttribute("aria-pressed",String(!weeksOn.size&&!favOnly));
+  chipEls.fav.setAttribute("aria-pressed",String(favOnly));
+  for(let w=1;w<=7;w++)chipEls[w].setAttribute("aria-pressed",String(weeksOn.has(w)));
+}
+[["all","All"],["fav","Favourites"],[1,"Wk 1"],[2,"Wk 2"],[3,"Wk 3"],[4,"Wk 4"],[5,"Wk 5"],[6,"Wk 6"],[7,"Wk 7"]].forEach(([v,l])=>{
   const b=document.createElement("button");b.className="chip"+(v==="fav"?" fav":"");b.textContent=l;
-  b.setAttribute("aria-pressed",String(v==="all"));
-  b.onclick=()=>{weekFilter=String(v);chips.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",String(c===b)));render();$("fit").click()};
-  chips.appendChild(b);
+  if(v==="fav"){b.innerHTML=starIcon(true,"ico")+" Favourites"}
+  if(typeof v==="number"){   // week chips carry their colour: a small swatch, and the whole chip fills with it when on
+    b.className="chip wk";b.textContent="";
+    b.style.setProperty("--wc",WEEK_COL[v]);b.style.setProperty("--wt",WEEK_TXT[v]);
+    const sw=document.createElement("i");sw.className="sw";b.append(sw,l);
+  }
+  b.onclick=()=>{
+    if(v==="all"){weeksOn.clear();favOnly=false}                 // All = clear every filter
+    else if(v==="fav")favOnly=!favOnly;
+    else weeksOn.has(v)?weeksOn.delete(v):weeksOn.add(v);        // tap again to deselect
+    syncChips();closeSheet();render();$("fit").click();
+  };
+  chipEls[v]=b;chips.appendChild(b);
 });
+syncChips();
 render();
 
 // Pull the latest list that the sync job wrote to events.json.
