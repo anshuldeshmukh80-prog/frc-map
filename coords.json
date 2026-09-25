@@ -1,0 +1,619 @@
+{
+ "centers": {
+  "Colorado Springs|USA": {
+   "lat": 38.8339,
+   "lng": -104.8214
+  },
+  "Duluth|USA": {
+   "lat": 46.7867,
+   "lng": -92.1005
+  },
+  "Winona|USA": {
+   "lat": 44.0499,
+   "lng": -91.6393
+  },
+  "Monterrey|Mexico": {
+   "lat": 25.6866,
+   "lng": -100.3161
+  },
+  "Enid|USA": {
+   "lat": 36.3956,
+   "lng": -97.8784
+  },
+  "Indaiatuba|Brazil": {
+   "lat": -23.0902,
+   "lng": -47.2181
+  },
+  "Searcy|USA": {
+   "lat": 35.2506,
+   "lng": -91.7362
+  },
+  "St. Louis|USA": {
+   "lat": 38.627,
+   "lng": -90.1994
+  },
+  "Grand Forks|USA": {
+   "lat": 47.9253,
+   "lng": -97.0329
+  },
+  "Rochester|USA": {
+   "lat": 43.1566,
+   "lng": -77.6088
+  },
+  "Cambridge Park|Australia": {
+   "lat": -33.7497,
+   "lng": 150.7794
+  },
+  "Guangzhou|China": {
+   "lat": 23.1291,
+   "lng": 113.2644
+  },
+  "Taipei City|Chinese Taipei": {
+   "lat": 25.033,
+   "lng": 121.5654
+  },
+  "Tempe|USA": {
+   "lat": 33.4255,
+   "lng": -111.94
+  },
+  "Salvador|Brazil": {
+   "lat": -12.9777,
+   "lng": -38.5016
+  },
+  "Orlando|USA": {
+   "lat": 28.5383,
+   "lng": -81.3792
+  },
+  "Honolulu|USA": {
+   "lat": 21.3069,
+   "lng": -157.8583
+  },
+  "Peoria|USA": {
+   "lat": 40.6936,
+   "lng": -89.589
+  },
+  "Shawnee|USA": {
+   "lat": 39.0228,
+   "lng": -94.7151
+  },
+  "Laurel|USA": {
+   "lat": 31.6941,
+   "lng": -89.1306
+  },
+  "Torreón|Mexico": {
+   "lat": 25.5428,
+   "lng": -103.4068
+  },
+  "Hempstead|USA": {
+   "lat": 40.7062,
+   "lng": -73.6187
+  },
+  "Cleveland|USA": {
+   "lat": 41.4993,
+   "lng": -81.6944
+  },
+  "Pittsburgh|USA": {
+   "lat": 40.4406,
+   "lng": -79.9959
+  },
+  "Sevierville|USA": {
+   "lat": 35.8681,
+   "lng": -83.5619
+  },
+  "Çankaya / Ankara|Türkiye": {
+   "lat": 39.9179,
+   "lng": 32.8627
+  },
+  "Langley|Canada": {
+   "lat": 49.1044,
+   "lng": -122.6604
+  },
+  "Cedar Falls|USA": {
+   "lat": 42.5349,
+   "lng": -92.4453
+  },
+  "Arlington Heights|USA": {
+   "lat": 42.0884,
+   "lng": -87.9806
+  },
+  "Nampa|USA": {
+   "lat": 43.5407,
+   "lng": -116.5635
+  },
+  "St. Paul|USA": {
+   "lat": 44.9537,
+   "lng": -93.09
+  },
+  "Albany|USA": {
+   "lat": 42.6526,
+   "lng": -73.7562
+  },
+  "Hamilton|USA": {
+   "lat": 39.3995,
+   "lng": -84.5613
+  },
+  "Bakırköy / İstanbul|Türkiye": {
+   "lat": 40.9819,
+   "lng": 28.8772
+  },
+  "Calgary|Canada": {
+   "lat": 51.0447,
+   "lng": -114.0719
+  },
+  "Flagstaff|USA": {
+   "lat": 35.1983,
+   "lng": -111.6513
+  },
+  "Cuiabá|Brazil": {
+   "lat": -15.6014,
+   "lng": -56.0979
+  },
+  "West Palm Beach|USA": {
+   "lat": 26.7153,
+   "lng": -80.0534
+  },
+  "Westwego|USA": {
+   "lat": 29.9066,
+   "lng": -90.1407
+  },
+  "Minnetonka|USA": {
+   "lat": 44.9212,
+   "lng": -93.4687
+  },
+  "Riverside|USA": {
+   "lat": 39.1767,
+   "lng": -94.6133
+  },
+  "Las Vegas|USA": {
+   "lat": 36.1699,
+   "lng": -115.1398
+  },
+  "Suffern|USA": {
+   "lat": 41.1148,
+   "lng": -74.1496
+  },
+  "Eindhoven|Netherlands": {
+   "lat": 51.4416,
+   "lng": 5.4697
+  },
+  "Huntsville|USA": {
+   "lat": 34.7304,
+   "lng": -86.5861
+  },
+  "Denver|USA": {
+   "lat": 39.7392,
+   "lng": -104.9903
+  },
+  "St. Cloud|USA": {
+   "lat": 45.5579,
+   "lng": -94.1632
+  },
+  "Lee's Summit|USA": {
+   "lat": 38.9108,
+   "lng": -94.3822
+  },
+  "New York|USA": {
+   "lat": 40.7128,
+   "lng": -74.006
+  },
+  "Tulsa|USA": {
+   "lat": 36.154,
+   "lng": -95.9928
+  },
+  "Dorval|Canada": {
+   "lat": 45.45,
+   "lng": -73.75
+  },
+  "Urla / İzmir|Türkiye": {
+   "lat": 38.3222,
+   "lng": 26.7644
+  },
+  "Tallahassee|USA": {
+   "lat": 30.4383,
+   "lng": -84.2807
+  },
+  "León de los Aldama|Mexico": {
+   "lat": 21.125,
+   "lng": -101.686
+  },
+  "Buffalo|USA": {
+   "lat": 42.8864,
+   "lng": -78.8784
+  }
+ },
+ "geo": {
+  "Escola SESI Indaiatuba/ São Paulo, Avenida Francisco de Paula Leite 2701 - Jardim Califórnia, Indaiatuba, Brazil": null,
+  "Avenida Francisco de Paula Leite 2701 - Jardim Califórnia, Indaiatuba, Brazil": null,
+  "Escola SESI Indaiatuba/ São Paulo, Indaiatuba, Brazil": null,
+  "Coronado High School, 1590 W Fillmore St., Colorado Springs, United States": {
+   "lat": 38.87297,
+   "lng": -104.85729
+  },
+  "DECC Arena/South Pioneer Hall, Duluth Entertainment Convention Center 350 Harbor Drive, Duluth, United States": null,
+  "Duluth Entertainment Convention Center 350 Harbor Drive, Duluth, United States": null,
+  "DECC Arena/South Pioneer Hall, Duluth, United States": null,
+  "DECC Arena/Edmund Fitzgerald Exhibit Hall, Duluth Entertainment Convention Center 350 Harbor Drive, Duluth, United States": null,
+  "DECC Arena/Edmund Fitzgerald Exhibit Hall, Duluth, United States": null,
+  "St. Mary's University, 700 Terrace Heights, Winona, United States": null,
+  "700 Terrace Heights, Winona, United States": null,
+  "St. Mary's University, Winona, United States": {
+   "lat": 44.04534,
+   "lng": -91.69519
+  },
+  "ITESM Campus Monterrey - Arena Borregos, Av. Eugenio Garza Sada 2501 Sur, Tecnológico, Monterrey, Mexico": null,
+  "Av. Eugenio Garza Sada 2501 Sur, Tecnológico, Monterrey, Mexico": null,
+  "ITESM Campus Monterrey - Arena Borregos, Monterrey, Mexico": null,
+  "Chisholm Trail Expo Center, 111 West Purdue Ave., Enid, United States": null,
+  "111 West Purdue Ave., Enid, United States": {
+   "lat": 36.43454,
+   "lng": -97.8787
+  },
+  "Searcy Lion Arena, 301 N Ella, Searcy, United States": null,
+  "301 N Ella, Searcy, United States": {
+   "lat": 35.25357,
+   "lng": -91.75999
+  },
+  "Penrith Valley Regional Sports Centre, 30 Herbert St, Cambridge Park, Australia": null,
+  "30 Herbert St, Cambridge Park, Australia": {
+   "lat": -33.75217,
+   "lng": 150.73651
+  },
+  "Nansha International Convention and Exhibition Center, East side of Hengli Island tip Mingzhu Bay, Nansha District, Guangzhou, China": null,
+  "East side of Hengli Island tip Mingzhu Bay, Nansha District, Guangzhou, China": null,
+  "Nansha International Convention and Exhibition Center, Guangzhou, China": null,
+  "Taipei Heping Basketball Gymnasium, No. 28, Ln. 76, Dunnan St, Taipei City, Chinese Taipei": null,
+  "No. 28, Ln. 76, Dunnan St, Taipei City, Chinese Taipei": null,
+  "Taipei Heping Basketball Gymnasium, Taipei City, Chinese Taipei": null,
+  "Chaifetz Arena, 1 S. Compton Ave, St. Louis, United States": {
+   "lat": 38.63253,
+   "lng": -90.22818
+  },
+  "Alerus Center, 1200 S 42nd Street, Grand Forks, United States": {
+   "lat": 47.9077,
+   "lng": -97.08908
+  },
+  "Gordon Field House - Rochester Institute of Technology, The Quarter Mile Walkway, Rochester, United States": null,
+  "The Quarter Mile Walkway, Rochester, United States": null,
+  "Gordon Field House - Rochester Institute of Technology, Rochester, United States": null,
+  "Corona del Sol High School, 1001 E Knox Rd, Tempe, United States": {
+   "lat": 33.32477,
+   "lng": -111.92539
+  },
+  "Centro de Convenções Salvador / Bahia, Av. Octávio Mangabeira 5,490 – Boca do Rio, Salvador, Brazil": null,
+  "Av. Octávio Mangabeira 5,490 – Boca do Rio, Salvador, Brazil": {
+   "lat": -12.9779,
+   "lng": -38.42635
+  },
+  "Addition Financial Arena at the University of Central Florida, 12777 Gemini Blvd N, Orlando, United States": null,
+  "12777 Gemini Blvd N, Orlando, United States": {
+   "lat": 28.60734,
+   "lng": -81.1973
+  },
+  "Saint Louis High School, 3142 Waialae Ave, Honolulu, United States": null,
+  "3142 Waialae Ave, Honolulu, United States": {
+   "lat": 21.288,
+   "lng": -157.80909
+  },
+  "Renaissance Coliseum - Bradley University, N Maplewood Ave, Peoria, United States": null,
+  "N Maplewood Ave, Peoria, United States": {
+   "lat": 40.70162,
+   "lng": -89.61856
+  },
+  "Mill Valley High School, 5900 Monticello Rd, Shawnee, United States": {
+   "lat": 39.01995,
+   "lng": -94.8406
+  },
+  "South Mississippi Fairgrounds, 1457 Ellisville Blvd, Laurel, United States": null,
+  "1457 Ellisville Blvd, Laurel, United States": {
+   "lat": 31.66653,
+   "lng": -89.15058
+  },
+  "Tecnologico de Monterrey Auditorium, Paseo del Tecnológico 751, Torreón, Mexico": null,
+  "Paseo del Tecnológico 751, Torreón, Mexico": {
+   "lat": 25.51561,
+   "lng": -103.39803
+  },
+  "David S. Mack Sports and Exhibition Complex, Hofstra University, 245, Hempstead, United States": null,
+  "Hofstra University, 245, Hempstead, United States": {
+   "lat": 40.71571,
+   "lng": -73.60247
+  },
+  "Cleveland State University - Wolstein Center, 2000 Prospect Street, Cleveland, United States": null,
+  "2000 Prospect Street, Cleveland, United States": {
+   "lat": 41.50191,
+   "lng": -81.65486
+  },
+  "David L. Lawrence Convention Center, David L. Lawrence Convention Center 1000 Fort Dequense Blvd, Pittsburgh, United States": null,
+  "David L. Lawrence Convention Center 1000 Fort Dequense Blvd, Pittsburgh, United States": null,
+  "David L. Lawrence Convention Center, Pittsburgh, United States": {
+   "lat": 40.44578,
+   "lng": -79.99651
+  },
+  "Sevierville Convention Center, 202 Gists Creek Rd, Sevierville, United States": {
+   "lat": 35.89396,
+   "lng": -83.58877
+  },
+  "ODTÜ GVO Lisesi Spor Salonu, ODTÜ GVO Spor Salonu Üniversiteler Mahallesi İhsan Doğramacı Bulvarı No:5, Ankara, Türkiye": null,
+  "ODTÜ GVO Spor Salonu Üniversiteler Mahallesi İhsan Doğramacı Bulvarı No:5, Ankara, Türkiye": null,
+  "ODTÜ GVO Lisesi Spor Salonu, Ankara, Türkiye": null,
+  "Langley Event Centre, 7888 200 St, Langley, Canada": null,
+  "7888 200 St, Langley, Canada": {
+   "lat": 49.14599,
+   "lng": -122.66642
+  },
+  "McLeod Center/UNI Dome, 2501 Hudson Road, Cedar Falls, United States": null,
+  "2501 Hudson Road, Cedar Falls, United States": {
+   "lat": 42.51497,
+   "lng": -92.46562
+  },
+  "Forest View Education Center, 2121 S Goebbert Road, Arlington Heights, United States": null,
+  "2121 S Goebbert Road, Arlington Heights, United States": {
+   "lat": 42.04623,
+   "lng": -87.97288
+  },
+  "Ford Idaho Center, 16114 N Idaho Center Blvd, Nampa, United States": null,
+  "16114 N Idaho Center Blvd, Nampa, United States": null,
+  "Ford Idaho Center, Nampa, United States": {
+   "lat": 43.60806,
+   "lng": -116.50805
+  },
+  "Warner Coliseum - Minnesota State Fairgrounds, 1265 Snelling Avenue North, St. Paul, United States": null,
+  "1265 Snelling Avenue North, St. Paul, United States": {
+   "lat": 44.98522,
+   "lng": -93.16692
+  },
+  "MVP Arena, 51 S Pearl St, Albany, United States": {
+   "lat": 42.64863,
+   "lng": -73.75472
+  },
+  "Spooky Nook Sports Champion Mill, 601 N B St., Hamilton, United States": {
+   "lat": 39.41072,
+   "lng": -84.5616
+  },
+  "Türkiye Atletizm Federasyon Atletizm Salonu, Zuhuratbaba Dr. Remzi Kazancıgil Cd. No:32, İstanbul, Türkiye": null,
+  "Zuhuratbaba Dr. Remzi Kazancıgil Cd. No:32, İstanbul, Türkiye": null,
+  "Türkiye Atletizm Federasyon Atletizm Salonu, İstanbul, Türkiye": null,
+  "STEMIA, 3636 Research Road NW, Calgary, Canada": null,
+  "3636 Research Road NW, Calgary, Canada": {
+   "lat": 51.08676,
+   "lng": -114.13749
+  },
+  "Northern Arizona University - Walkup Skydome, 1701 S San Francisco St, Flagstaff, United States": null,
+  "1701 S San Francisco St, Flagstaff, United States": {
+   "lat": 35.1806,
+   "lng": -111.6529
+  },
+  "Centro de Eventos do Pantanal, Cuiabá, Mato Grosso, Av. Bernardo Antônio de Oliveira Neto s/n – Santa Marta, Cuiabá, Brazil": null,
+  "Av. Bernardo Antônio de Oliveira Neto s/n – Santa Marta, Cuiabá, Brazil": {
+   "lat": -15.57528,
+   "lng": -56.10738
+  },
+  "Palm Beach Convention Center, 650 Okeechobee Blvd., West Palm Beach, United States": null,
+  "650 Okeechobee Blvd., West Palm Beach, United States": {
+   "lat": 26.7048,
+   "lng": -80.05882
+  },
+  "Alario Center, 2000 Segnette Blvd, Westwego, United States": {
+   "lat": 29.90547,
+   "lng": -90.16279
+  },
+  "Royals Athletic Center, 2400 Royals Drive, Minnetonka, United States": null,
+  "2400 Royals Drive, Minnetonka, United States": {
+   "lat": 44.95758,
+   "lng": -93.41281
+  },
+  "Park Hill South High School, 4500 River Pk Dr, Riverside, United States": {
+   "lat": 39.17646,
+   "lng": -94.62467
+  },
+  "UNLV - Thomas & Mack Center, 4505 S. Maryland Parkway, Las Vegas, United States": null,
+  "4505 S. Maryland Parkway, Las Vegas, United States": {
+   "lat": 36.10794,
+   "lng": -115.14391
+  },
+  "Rockland Community College - Athletic Center, 145 College Road, Suffern, United States": null,
+  "145 College Road, Suffern, United States": {
+   "lat": 41.13309,
+   "lng": -74.08864
+  },
+  "Türkiye Atletizm Federasyonu Atletizim Salonu, Zuhuratbaba Dr. Remzi Kazancıgil Cd. No:32, İstanbul, Türkiye": null,
+  "Türkiye Atletizm Federasyonu Atletizim Salonu, İstanbul, Türkiye": null,
+  "Indoor Sportcentrum Eindhoven, Theo Koomenlaan 1, Eindhoven, Netherlands": null,
+  "Theo Koomenlaan 1, Eindhoven, Netherlands": {
+   "lat": 51.41286,
+   "lng": 5.48132
+  },
+  "Von Braun Center, 700 Monroe Street SW, Huntsville, United States": {
+   "lat": 34.72691,
+   "lng": -86.59102
+  },
+  "Daniel L. Ritchie Center, University of Denver 2240 Buchtel Boulevard, Denver, United States": null,
+  "University of Denver 2240 Buchtel Boulevard, Denver, United States": {
+   "lat": 39.68526,
+   "lng": -104.96479
+  },
+  "River's Edge Convention Center, 10 4th Ave S, St. Cloud, United States": null,
+  "10 4th Ave S, St. Cloud, United States": {
+   "lat": 45.56144,
+   "lng": -94.15667
+  },
+  "Lee's Summit North High School, 901 NE Douglas St, Lee's Summit, United States": {
+   "lat": 38.92874,
+   "lng": -94.37492
+  },
+  "Fort Washington Armory - NYC, 216 Fort Washington Avenue, New York, United States": null,
+  "216 Fort Washington Avenue, New York, United States": {
+   "lat": 40.84267,
+   "lng": -73.94196
+  },
+  "Expo Square Pavilion, 4145 East 21st Street, Tulsa, United States": null,
+  "4145 East 21st Street, Tulsa, United States": {
+   "lat": 36.13347,
+   "lng": -95.72782
+  },
+  "Bombardier, 200 Cote-Vertu, Dorval, Canada": {
+   "lat": 45.47931,
+   "lng": -73.72346
+  },
+  "İzmir Yüksek Teknoloji Enstitüsü Spor Salonu, İYTE Kapalı Spor Salonu Gülbahçe Mahallesi Gülbahçe Caddesi (Kampüs alanı içi), İzmir, Türkiye": null,
+  "İYTE Kapalı Spor Salonu Gülbahçe Mahallesi Gülbahçe Caddesi (Kampüs alanı içi), İzmir, Türkiye": null,
+  "İzmir Yüksek Teknoloji Enstitüsü Spor Salonu, İzmir, Türkiye": null,
+  "Alfred Lawson Jr Multipurpose Center - Florida A&M University, 1800 Althea Gibson Wy, Tallahassee, United States": null,
+  "1800 Althea Gibson Wy, Tallahassee, United States": {
+   "lat": 30.42424,
+   "lng": -84.29054
+  },
+  "Tecnológico de Monterrey Campus León Eugenio, Garza Sada S/N Predio Cerro Gordo, León de los Aldama, Mexico": null,
+  "Garza Sada S/N Predio Cerro Gordo, León de los Aldama, Mexico": null,
+  "Tecnológico de Monterrey Campus León Eugenio, León de los Aldama, Mexico": {
+   "lat": 21.1657,
+   "lng": -101.7153
+  },
+  "Buffalo State Sports Arena, 267 Rees St #251, Buffalo, United States": null,
+  "267 Rees St #251, Buffalo, United States": {
+   "lat": 42.93353,
+   "lng": -78.88732
+  },
+  "Escola SESI Indaiatuba, Indaiatuba, Brazil": null,
+  "Avenida Franci co de Paula Leite 2701 - Jardim Califórnia, Indaiatuba, Brazil": null,
+  "Coronado High School, Colorado Springs, United States": {
+   "lat": 38.87297,
+   "lng": -104.85729
+  },
+  "DECC Arena, Duluth, United States": {
+   "lat": 46.78068,
+   "lng": -92.09797
+  },
+  "Chisholm Trail Expo Center, Enid, United States": {
+   "lat": 36.43256,
+   "lng": -97.87943
+  },
+  "Searcy Lion Arena, Searcy, United States": null,
+  "Penrith Valley Regional Sports Centre, Cambridge Park, Australia": {
+   "lat": -33.75454,
+   "lng": 150.7349
+  },
+  "Ea t  ide of Hengli I land tip Mingzhu Bay, Nan ha Di trict, Guangzhou, China": null,
+  "Chaifetz Arena, St. Louis, United States": {
+   "lat": 38.63253,
+   "lng": -90.22818
+  },
+  "Alerus Center, Grand Forks, United States": {
+   "lat": 47.9108,
+   "lng": -97.09136
+  },
+  "Corona del Sol High School, Tempe, United States": {
+   "lat": 33.32477,
+   "lng": -111.92539
+  },
+  "Centro de Convenções Salvador, Salvador, Brazil": {
+   "lat": -12.98414,
+   "lng": -38.43308
+  },
+  "Addition Financial Arena at the University of Central Florida, Orlando, United States": null,
+  "Saint Louis High School, Honolulu, United States": null,
+  "Renaissance Coliseum - Bradley University, Peoria, United States": null,
+  "Mill Valley High School, Shawnee, United States": {
+   "lat": 39.01995,
+   "lng": -94.8406
+  },
+  "South Mississippi Fairgrounds, Laurel, United States": {
+   "lat": 31.6644,
+   "lng": -89.15259
+  },
+  "Tecnologico de Monterrey Auditorium, Torreón, Mexico": null,
+  "Pa eo del Tecnológico 751, Torreón, Mexico": null,
+  "David S. Mack Sports and Exhibition Complex, Hempstead, United States": null,
+  "Hof tra Univer ity, 245, Hempstead, United States": null,
+  "Cleveland State University - Wolstein Center, Cleveland, United States": {
+   "lat": 41.49923,
+   "lng": -81.67665
+  },
+  "Sevierville Convention Center, Sevierville, United States": {
+   "lat": 35.89396,
+   "lng": -83.58877
+  },
+  "ODTÜ GVO Lisesi Spor Salonu, Çankaya, Ankara, Türkiye": null,
+  "ODTÜ GVO Spor Salonu Üniver iteler Mahalle i İh an Doğramacı Bulvarı No:5, Çankaya, Ankara, Türkiye": null,
+  "Langley Event Centre, Langley, Canada": null,
+  "McLeod Center, Cedar Falls, United States": {
+   "lat": 42.51424,
+   "lng": -92.4673
+  },
+  "Forest View Education Center, Arlington Heights, United States": null,
+  "Warner Coliseum - Minnesota State Fairgrounds, St. Paul, United States": null,
+  "MVP Arena, Albany, United States": {
+   "lat": 42.64863,
+   "lng": -73.75472
+  },
+  "Spooky Nook Sports Champion Mill, Hamilton, United States": {
+   "lat": 39.41072,
+   "lng": -84.5616
+  },
+  "Türkiye Atletizm Federasyon Atletizm Salonu, Bakırköy, İstanbul, Türkiye": null,
+  "Zuhuratbaba Dr. Remzi Kazancıgil Cd. No:32, Bakırköy, İstanbul, Türkiye": null,
+  "STEMIA, Calgary, Canada": null,
+  "3636 Re earch Road NW, Calgary, Canada": null,
+  "Northern Arizona University - Walkup Skydome, Flagstaff, United States": null,
+  "1701 S San Franci co St, Flagstaff, United States": null,
+  "Centro de Eventos do Pantanal, Cuiabá, Mato Grosso, Cuiabá, Brazil": {
+   "lat": -15.566,
+   "lng": -56.10615
+  },
+  "Palm Beach Convention Center, West Palm Beach, United States": null,
+  "Alario Center, Westwego, United States": {
+   "lat": 29.90547,
+   "lng": -90.16279
+  },
+  "Royals Athletic Center, Minnetonka, United States": null,
+  "2400 Royal  Drive, Minnetonka, United States": {
+   "lat": 44.91588,
+   "lng": -93.44268
+  },
+  "Park Hill South High School, Riverside, United States": {
+   "lat": 39.17646,
+   "lng": -94.62467
+  },
+  "UNLV - Thomas & Mack Center, Las Vegas, United States": null,
+  "Rockland Community College - Athletic Center, Suffern, United States": null,
+  "Türkiye Atletizm Federasyonu Atletizim Salonu, Bakırköy, İstanbul, Türkiye": null,
+  "Indoor Sportcentrum Eindhoven, Eindhoven, Netherlands": {
+   "lat": 51.4123,
+   "lng": 5.48115
+  },
+  "Von Braun Center, Huntsville, United States": {
+   "lat": 34.72691,
+   "lng": -86.59102
+  },
+  "Daniel L. Ritchie Center, Denver, United States": {
+   "lat": 39.68195,
+   "lng": -104.96193
+  },
+  "River's Edge Convention Center, St. Cloud, United States": {
+   "lat": 45.56187,
+   "lng": -94.15682
+  },
+  "Lee's Summit North High School, Lee's Summit, United States": {
+   "lat": 38.92874,
+   "lng": -94.37492
+  },
+  "Fort Washington Armory - NYC, New York, United States": null,
+  "216 Fort Wa hington Avenue, New York, United States": null,
+  "Expo Square Pavilion, Tulsa, United States": {
+   "lat": 36.13692,
+   "lng": -95.93293
+  },
+  "Bombardier, Dorval, Canada": {
+   "lat": 45.47511,
+   "lng": -73.72912
+  },
+  "İzmir Yüksek Teknoloji Enstitüsü Spor Salonu, Urla, İzmir, Türkiye": null,
+  "İYTE Kapalı Spor Salonu Gülbahçe Mahalle i Gülbahçe Cadde i (Kampü  alanı içi), Urla, İzmir, Türkiye": null,
+  "Alfred Lawson Jr Multipurpose Center - Florida A&M University, Tallahassee, United States": null,
+  "1800 Althea Gib on Wy, Tallahassee, United States": null,
+  "Buffalo State Sports Arena, Buffalo, United States": {
+   "lat": 42.9346,
+   "lng": -78.88605
+  }
+ }
+}

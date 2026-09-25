@@ -1,0 +1,67 @@
+{
+ "_readme": "Hand-checked dot positions for venues the automatic lookup cannot find. Each entry only applies while FIRST still lists the same venue name, so a venue change is never overridden by a stale position.",
+ "CNGU1": {
+  "venue": "Nansha International Convention and Exhibition Center",
+  "lat": 22.75333,
+  "lng": 113.53326,
+  "note": "Nansha International Convention & Exhibition Center"
+ },
+ "CNGU2": {
+  "venue": "Nansha International Convention and Exhibition Center",
+  "lat": 22.75333,
+  "lng": 113.53326
+ },
+ "TUIS": {
+  "venue": "Türkiye Atletizm Federasyon Atletizm Salonu",
+  "lat": 40.98722,
+  "lng": 28.85543,
+  "note": "Turkish Athletics Federation, Dr. Remzi Kazancigil Cd., Bakirkoy (same street as the listed address)"
+ },
+ "TUIS2": {
+  "venue": "Türkiye Atletizm Federasyon Atletizm Salonu",
+  "lat": 40.98722,
+  "lng": 28.85543
+ },
+ "TUHC": {
+  "venue": "Türkiye Atletizm Federasyon Atletizm Salonu",
+  "lat": 40.98722,
+  "lng": 28.85543
+ },
+ "TUIS3": {
+  "venue": "Türkiye Atletizm Federasyonu Atletizim Salonu",
+  "lat": 40.98722,
+  "lng": 28.85543
+ },
+ "CTTC": {
+  "venue": "Taipei Heping Basketball Gymnasium",
+  "lat": 25.02161,
+  "lng": 121.54552
+ },
+ "MXMO": {
+  "venue": "ITESM Campus Monterrey - Arena Borregos",
+  "lat": 25.65064,
+  "lng": -100.28713
+ },
+ "BRSP": {
+  "venue": "Escola SESI Indaiatuba/ São Paulo",
+  "lat": -23.11483,
+  "lng": -47.2208
+ },
+ "NYRO": {
+  "venue": "Gordon Field House - Rochester Institute of Technology",
+  "lat": 43.08504,
+  "lng": -77.67199
+ },
+ "TUAK": {
+  "venue": "ODTÜ GVO Lisesi Spor Salonu",
+  "lat": 39.90443,
+  "lng": 32.76863,
+  "note": "METU GVO High School"
+ },
+ "TUIZ": {
+  "venue": "İzmir Yüksek Teknoloji Enstitüsü Spor Salonu",
+  "lat": 38.32266,
+  "lng": 26.63773,
+  "note": "Izmir Institute of Technology campus (hall is inside the campus)"
+ }
+}

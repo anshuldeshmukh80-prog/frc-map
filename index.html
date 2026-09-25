@@ -104,7 +104,9 @@ dt{color:var(--ink2)}dd{margin:0;font-variant-numeric:tabular-nums;text-align:ri
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 // [code, name, city, state, country, week, dates(2027), team capacity, lat, lng]
-const E=[
+// Built-in copy of the list. events.json (kept fresh by the sync job) replaces it as soon as it loads.
+const norm=a=>({code:a[0],name:a[1],city:a[2],st:a[3],country:a[4],week:a[5],dates:a[6],cap:a[7],lat:a[8],lng:a[9]});
+let E=[
 ["COSP","Pikes Peak Regional","Colorado Springs","CO","USA",1,"Mar 4–7",21,38.8339,-104.8214],
 ["MNDU","Lake Superior Regional","Duluth","MN","USA",1,"Mar 3–6",38,46.7867,-92.1005],
 ["MNDU2","Northern Lights Regional","Duluth","MN","USA",1,"Mar 3–6",38,46.7867,-92.1005],
@@ -166,7 +168,8 @@ const E=[
 ["FLTA","Tallahassee Regional","Tallahassee","FL","USA",7,"Apr 15–18",38,30.4383,-84.2807],
 ["MXLE","Regional Leon","León de los Aldama","GUA","Mexico",7,"Apr 14–17",22,21.1250,-101.6860],
 ["NYBU","Buffalo Niagara Regional","Buffalo","NY","USA",7,"Apr 14–17",38,42.8864,-78.8784]
-].map(a=>({code:a[0],name:a[1],city:a[2],st:a[3],country:a[4],week:a[5],dates:a[6],cap:a[7],lat:a[8],lng:a[9]}));
+].map(norm);
+let synced="";
 
 // Favourites are saved in this browser (localStorage) so they are still there on the next visit.
 // First visit only: start with the two same-city pairs from the research. Set STARTER=[] for a blank start.
@@ -193,9 +196,12 @@ $("layer").onclick=()=>{
 L.control.scale({imperial:false,position:"bottomleft",maxWidth:110}).addTo(map);
 
 // one dot per regional. Events sharing a city are fanned a few pixels around the exact city centre.
-const byPt=new Map();
-E.forEach(e=>{const k=e.lat+","+e.lng;if(!byPt.has(k))byPt.set(k,[]);byPt.get(k).push(e)});
-E.forEach(e=>{const g=byPt.get(e.lat+","+e.lng);e.i=g.indexOf(e);e.n=g.length});
+function group(){
+  const byPt=new Map();
+  E.forEach(e=>{const k=e.lat+","+e.lng;if(!byPt.has(k))byPt.set(k,[]);byPt.get(k).push(e)});
+  E.forEach(e=>{const g=byPt.get(e.lat+","+e.lng);e.i=g.indexOf(e);e.n=g.length});
+}
+group();
 const layer=L.layerGroup().addTo(map);
 let weekFilter="all";
 const visible=()=>E.filter(e=>weekFilter==="all"||(weekFilter==="fav"?favs.has(e.code):e.week===+weekFilter));
@@ -216,7 +222,7 @@ function render(){
     m.bindPopup(()=>popupHtml(e),{closeButton:false,offset:[0,-4],autoPanPaddingTopLeft:[20,110],autoPanPaddingBottomRight:[20,20]});
     m.on("popupopen",x=>{x.popup.getElement().querySelector("[data-c]").onclick=()=>openSheet(e.code)});
   });
-  $("count").textContent=v.length+" regional"+(v.length===1?"":"s")+(weekFilter==="all"?" · Mar–Apr 2027":weekFilter==="fav"?" · favourites":" · week "+weekFilter);
+  $("count").textContent=v.length+" regional"+(v.length===1?"":"s")+(weekFilter==="all"?" · Mar–Apr 2027":weekFilter==="fav"?" · favourites":" · week "+weekFilter)+(synced?" · synced "+synced:"");
 }
 map.on("zoomend",()=>markers.forEach(m=>m.setLatLng(place(m.ev))));
 function popupHtml(e){
@@ -239,15 +245,17 @@ function fillSheet(code){
    '<p class="sub">'+esc(loc)+'</p>'+
    '<div class="badges"><span class="b">'+e.code+'</span><span class="b">Week '+e.week+'</span><span class="b">Regional</span>'+(f?'<span class="b fv">★ Favourite</span>':'')+'</div>'+
    '<dl><dt>Dates</dt><dd>'+e.dates+', 2027</dd>'+
+    (e.venue?'<dt>Venue</dt><dd>'+esc(e.venue)+'</dd>'+(e.addr?'<dt>Address</dt><dd>'+esc(e.addr)+'</dd>':''):'')+
     '<dt>City</dt><dd>'+esc(e.city)+'</dd>'+
     '<dt>State / Province</dt><dd>'+esc(e.st||"—")+'</dd>'+
     '<dt>Country</dt><dd>'+esc(e.country)+'</dd>'+
     '<dt>Team capacity</dt><dd>'+(e.cap?e.cap+' teams':'Not announced')+'</dd>'+
-    '<dt>City centre</dt><dd>'+e.lat.toFixed(4)+', '+e.lng.toFixed(4)+'</dd></dl>'+
+    '<dt>'+(e.precise?'Venue location':'City centre')+'</dt><dd>'+e.lat.toFixed(4)+', '+e.lng.toFixed(4)+'</dd></dl>'+
    '<div class="acts"><button class="act'+(f?' on':'')+'" id="sf" aria-pressed="'+f+'">'+(f?'★ Favourited':'☆ Add to favourites')+'</button>'+
     '<a class="act p" target="_blank" rel="noopener" href="https://frc-events.firstinspires.org/2027/'+e.code+'">FIRST event page</a>'+
-    '<a class="act" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query='+e.lat+','+e.lng+'">Open in Maps</a></div>'+
-   '<p class="note">The dot is placed at the centre of '+esc(e.city)+(e.n>1?' and nudged a few pixels so the '+e.n+' events there can be tapped separately':'')+'. FIRST has not published venue addresses yet, so this is the city, not the arena.</p>';
+    '<a class="act" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query='+(e.precise?encodeURIComponent(e.venue+' '+e.addr):e.lat+','+e.lng)+'">Open in Maps</a></div>'+
+   '<p class="note">'+(e.precise?'The dot is on the venue, taken from the official FIRST event page and matched to a map location.':'FIRST has not listed a venue for this event yet, so the dot is at the centre of '+esc(e.city)+'.')+(e.n>1?' '+e.n+' events share this spot, so their dots are nudged a few pixels apart.':'')+'</p>';
+
   $("sheet").classList.add("open");
   $("sx").onclick=closeSheet;
   $("sf").onclick=()=>{
@@ -281,6 +289,16 @@ const chips=$("chips");
   chips.appendChild(b);
 });
 render();
+
+// Pull the latest list that the sync job wrote to events.json.
+fetch("events.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>{
+  if(!d||!Array.isArray(d.events)||d.events.length<30)return;
+  E=d.events;group();
+  const mo=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],c=String(d.checked||"").split("-");
+  synced=c.length===3?mo[c[1]-1]+" "+(+c[2]):"";
+  render();
+  if($("sheet").classList.contains("open"))closeSheet();
+}).catch(()=>{});
 </script>
 </body>
 </html>
