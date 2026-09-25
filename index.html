@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f2efe9">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>FRC 2027 Regionals Map</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+:root{
+  --glass:rgba(255,255,255,.82); --glass-b:rgba(0,0,0,.08); --ink:#1c1c1e; --ink2:#6b6b70;
+  --sheet:#fff; --chip:#f0f0f3; --accent:#0a84ff; --star:#ffcc00; --dot-ring:#3a3a3c;
+  --shadow:0 4px 18px rgba(0,0,0,.18);
+}
+@media (prefers-color-scheme:dark){:root{
+  --glass:rgba(38,38,42,.82); --glass-b:rgba(255,255,255,.12); --ink:#f5f5f7; --ink2:#a1a1a6;
+  --sheet:#1f1f23; --chip:#2c2c31; --accent:#4da3ff; --dot-ring:#111;
+}}
+*{box-sizing:border-box}
+html,body{height:100%;height:100dvh;overflow:hidden;overscroll-behavior:none;margin:0;background:#e8e4dc;color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+#map{position:absolute;inset:0;background:#e8e4dc}
+.glass{background:var(--glass);backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6);
+  border:1px solid var(--glass-b);box-shadow:var(--shadow)}
+#top{position:absolute;z-index:800;left:calc(12px + env(safe-area-inset-left,0px));right:calc(12px + env(safe-area-inset-right,0px));top:calc(12px + env(safe-area-inset-top,0px));display:flex;flex-direction:column;gap:8px;pointer-events:none}
+#title{pointer-events:auto;align-self:flex-start;border-radius:14px;padding:8px 14px}
+#title b{font-size:15px;letter-spacing:-.01em}#title span{display:block;font-size:11.5px;color:var(--ink2);margin-top:1px}
+#chips{pointer-events:auto;display:flex;gap:6px;overflow-x:auto;padding:2px 2px 6px;scrollbar-width:none}
+#chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--glass-b);background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  color:var(--ink);font-weight:600;font-size:13px;line-height:1;font-family:inherit;padding:8px 13px;border-radius:999px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.chip[aria-pressed=true]{background:var(--accent);color:#fff;border-color:transparent}
+#ctl{position:absolute;z-index:800;right:calc(12px + env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;align-items:center}
+.grp{border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.grp button,.solo{width:44px;height:44px;border:0;background:transparent;color:var(--ink);font-size:24px;line-height:1;cursor:pointer;display:grid;place-items:center;font-family:inherit}
+.grp button+button{border-top:1px solid var(--glass-b)}
+.solo{border-radius:12px;font-size:13px;font-weight:700;background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--glass-b);box-shadow:var(--shadow)}
+.grp button:active,.solo:active{background:var(--glass-b)}
+button:focus-visible,.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#zoomlbl{position:absolute;z-index:800;left:12px;bottom:calc(14px + env(safe-area-inset-bottom,0px));font-size:11px;border-radius:8px;padding:5px 8px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.leaflet-bottom.leaflet-left{bottom:calc(44px + env(safe-area-inset-bottom,0px))}
+.leaflet-control-scale-line{background:var(--glass);color:var(--ink);border-color:var(--ink2);font-size:11px}
+.leaflet-control-attribution{font-size:10px;background:var(--glass)!important;color:var(--ink2)!important}
+.leaflet-control-attribution a{color:var(--ink2)!important}
+.leaflet-bottom.leaflet-right{bottom:calc(0px + env(safe-area-inset-bottom,0px))}
+.leaflet-popup-content-wrapper{background:var(--sheet);color:var(--ink);border-radius:14px;box-shadow:var(--shadow)}
+.leaflet-popup-tip{background:var(--sheet)}
+.leaflet-popup-content{margin:10px 12px;min-width:170px}
+.pcity{font-size:11px;color:var(--ink2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em}
+.pbtn{display:flex;align-items:center;gap:6px;width:100%;text-align:left;border:0;background:none;padding:6px 0;font-weight:600;font-size:14px;line-height:1.25;font-family:inherit;color:var(--accent);cursor:pointer}
+.pbtn+.pbtn{border-top:1px solid var(--glass-b)}
+.pbtn .st{color:#e0a800}
+.pbtn small{display:block;font-weight:500;color:var(--ink2);font-size:11.5px}
+#sheet{position:absolute;z-index:900;left:0;right:0;bottom:0;max-height:78%;overflow:auto;background:var(--sheet);border-radius:20px 20px 0 0;
+  box-shadow:0 -6px 28px rgba(0,0,0,.25);padding:8px 20px calc(20px + env(safe-area-inset-bottom,0px));
+  transform:translateY(105%);transition:transform .28s cubic-bezier(.2,.8,.2,1);max-width:520px;margin:0 auto}
+#sheet.open{transform:none}
+@media (min-width:560px),(orientation:landscape) and (max-height:520px){#sheet{left:calc(14px + env(safe-area-inset-left,0px));right:auto;bottom:14px;border-radius:20px;width:min(380px,46vw);max-height:calc(100% - 90px);margin:0}}
+@media (orientation:landscape) and (max-height:520px){#sheet{max-height:calc(100% - 112px)}#title span{display:none}#ctl{top:auto;bottom:calc(30px + env(safe-area-inset-bottom,0px));transform:none}}
+.grab{width:38px;height:5px;border-radius:3px;background:var(--glass-b);margin:2px auto 12px}
+.sh-h{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+.sh-h h2{margin:0;font-size:20px;letter-spacing:-.02em;line-height:1.2;text-wrap:balance}
+.x{border:0;background:var(--chip);color:var(--ink2);width:30px;height:30px;border-radius:50%;font-size:15px;cursor:pointer;flex:none}
+.sub{color:var(--ink2);font-size:13.5px;margin:4px 0 14px}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.b{background:var(--chip);border-radius:8px;padding:5px 9px;font-size:12px;font-weight:600}
+dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:9px 16px;font-size:14px}
+dt{color:var(--ink2)}dd{margin:0;font-variant-numeric:tabular-nums;text-align:right}
+.acts{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+.act{flex:1;min-width:120px;text-align:center;text-decoration:none;border:0;cursor:pointer;font-weight:600;font-size:14px;line-height:1;font-family:inherit;padding:12px;border-radius:12px;background:var(--chip);color:var(--ink)}
+.act.p{background:var(--accent);color:#fff}
+.act.on{background:#ffcc00;color:#3a2f00}
+.b.fv{background:#ffcc00;color:#3a2f00}
+.chip.fav[aria-pressed=true]{background:#ffcc00;color:#3a2f00}
+.note{margin-top:14px;font-size:11.5px;color:var(--ink2);line-height:1.4}
+.leaflet-interactive{cursor:pointer}
+</style>
+</head>
+<body>
+<div id="map" aria-label="Map of FRC 2027 regionals"></div>
+
+<div id="top">
+  <div id="title" class="glass"><b>FRC 2027 Regionals</b><span id="count"></span></div>
+  <div id="chips" role="group" aria-label="Filter by week"></div>
+</div>
+
+<div id="ctl">
+  <div class="grp glass">
+    <button id="zin" aria-label="Zoom in">+</button>
+    <button id="zout" aria-label="Zoom out">−</button>
+  </div>
+  <button id="layer" class="solo glass" aria-label="Switch map type">Sat</button>
+  <button id="fit" class="solo glass" aria-label="Show all regionals">All</button>
+</div>
+<div id="zoomlbl" class="glass"></div>
+
+<section id="sheet" aria-live="polite"></section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+// [code, name, city, state, country, week, dates(2027), team capacity, lat, lng]
+const E=[
+["COSP","Pikes Peak Regional","Colorado Springs","CO","USA",1,"Mar 4–7",21,38.8339,-104.8214],
+["MNDU","Lake Superior Regional","Duluth","MN","USA",1,"Mar 3–6",38,46.7867,-92.1005],
+["MNDU2","Northern Lights Regional","Duluth","MN","USA",1,"Mar 3–6",38,46.7867,-92.1005],
+["MNWI","Minnesota Bluff Country Regional","Winona","MN","USA",1,"Mar 3–6",32,44.0499,-91.6393],
+["MXMO","Regional Monterrey presented by PrepaTec","Monterrey","","Mexico",1,"Mar 3–6",32,25.6866,-100.3161],
+["OKOK","Oklahoma Regional","Enid","OK","USA",1,"Mar 3–6",38,36.3956,-97.8784],
+["BRSP","Regional Brazil - SESI Indaiatuba","Indaiatuba","SP","Brazil",1,"Mar 4–7",26,-23.0902,-47.2181],
+["ARLI","Arkansas Regional","Searcy","AR","USA",2,"Mar 10–13",25,35.2506,-91.7362],
+["MOSL","St. Louis Regional","St. Louis","MO","USA",2,"Mar 10–13",35,38.6270,-90.1994],
+["NDGF","Great Northern Regional","Grand Forks","ND","USA",2,"Mar 10–13",38,47.9253,-97.0329],
+["NYRO","Finger Lakes Regional","Rochester","NY","USA",2,"Mar 10–13",38,43.1566,-77.6088],
+["AUSC","Southern Cross Regional","Cambridge Park","NSW","Australia",2,"Mar 11–14",32,-33.7497,150.7794],
+["CNGU1","Guangzhou Regional","Guangzhou","GD","China",2,"Mar 11–14",30,23.1291,113.2644],
+["CTTC","Taipei City Regional","Taipei City","","Chinese Taipei",2,"Mar 11–14",0,25.0330,121.5654],
+["AZVA","AZ Valley Regional presented by Microchip and the Sanghi Family Foundation","Tempe","AZ","USA",3,"Mar 17–20",32,33.4255,-111.9400],
+["BRBA","Regional Brazil - Festival SESI de Robótica - Salvador","Salvador","BA","Brazil",3,"Mar 18–21",38,-12.9777,-38.5016],
+["CNGU2","Tiangong Regional","Guangzhou","GD","China",3,"Mar 18–21",30,23.1291,113.2644],
+["FLOR","Orlando Regional","Orlando","FL","USA",3,"Mar 17–20",44,28.5383,-81.3792],
+["HIHO","Hawaii Regional","Honolulu","HI","USA",3,"Mar 18–21",24,21.3069,-157.8583],
+["ILPE","Central Illinois Regional","Peoria","IL","USA",3,"Mar 17–20",21,40.6936,-89.5890],
+["KSLA","Heartland Regional","Shawnee","KS","USA",3,"Mar 17–20",27,39.0228,-94.7151],
+["MSLR","Magnolia Regional","Laurel","MS","USA",3,"Mar 17–20",38,31.6941,-89.1306],
+["MXTO","Regional Laguna presented by Peñoles","Torreón","COA","Mexico",3,"Mar 17–20",12,25.5428,-103.4068],
+["NYLI2","FIRST Long Island Regional","Hempstead","NY","USA",3,"Mar 17–20",38,40.7062,-73.6187],
+["OHCL","Buckeye Regional","Cleveland","OH","USA",3,"Mar 17–20",45,41.4993,-81.6944],
+["PACA","Greater Pittsburgh Regional","Pittsburgh","PA","USA",3,"Mar 17–20",44,40.4406,-79.9959],
+["TNKN","Smoky Mountains Regional","Sevierville","TN","USA",3,"Mar 17–20",38,35.8681,-83.5619],
+["TUAK","Ankara Regional","Çankaya / Ankara","06","Türkiye",3,"Mar 19–21",26,39.9179,32.8627],
+["BCVI","Canadian Pacific Regional","Langley","BC","Canada",4,"Mar 23–26",23,49.1044,-122.6604],
+["IACF","Iowa Regional","Cedar Falls","IA","USA",4,"Mar 24–27",39,42.5349,-92.4453],
+["ILCH","Midwest Regional Presented By Baxter","Arlington Heights","IL","USA",4,"Mar 24–27",25,42.0884,-87.9806],
+["IMWR","Intermountain West Regional","Nampa","ID","USA",4,"Mar 24–27",28,43.5407,-116.5635],
+["MNMI","Minnesota 10,000 Lakes Regional","St. Paul","MN","USA",4,"Mar 24–27",38,44.9537,-93.0900],
+["NYTR","New York Tech Valley Regional","Albany","NY","USA",4,"Mar 24–27",38,42.6526,-73.7562],
+["OHMV","Miami Valley Regional","Hamilton","OH","USA",4,"Mar 24–27",40,39.3995,-84.5613],
+["TUIS","İstanbul Regional","Bakırköy / İstanbul","34","Türkiye",4,"Mar 26–28",46,40.9819,28.8772],
+["TUIS2","Bosphorus Regional","Bakırköy / İstanbul","34","Türkiye",4,"Mar 26–28",46,40.9819,28.8772],
+["ABCA","Canadian Rockies Regional","Calgary","AB","Canada",5,"Mar 31–Apr 3",22,51.0447,-114.0719],
+["AZFG","AZ North Regional presented by Microchip","Flagstaff","AZ","USA",5,"Mar 31–Apr 3",50,35.1983,-111.6513],
+["BRMT","Regional Brazil - Mato Grosso - Cuiabá","Cuiabá","MT","Brazil",5,"Mar 29–Apr 1",18,-15.6014,-56.0979],
+["FLWP","South Florida Regional","West Palm Beach","FL","USA",5,"Mar 31–Apr 3",30,26.7153,-80.0534],
+["LAKE","Bayou Regional","Westwego","LA","USA",5,"Mar 31–Apr 3",46,29.9066,-90.1407],
+["MNUM","Minnesota North Star Regional","Minnetonka","MN","USA",5,"Mar 31–Apr 3",38,44.9212,-93.4687],
+["MOSE","City of Fountains Regional","Riverside","MO","USA",5,"Mar 31–Apr 3",27,39.1767,-94.6133],
+["NVLV","Las Vegas Regional","Las Vegas","NV","USA",5,"Mar 31–Apr 3",35,36.1699,-115.1398],
+["NYSU","Hudson Valley Regional","Suffern","NY","USA",5,"Mar 31–Apr 3",38,41.1148,-74.1496],
+["TUHC","Haliç Regional","Bakırköy / İstanbul","34","Türkiye",5,"Apr 2–4",46,40.9819,28.8772],
+["TUIS3","Marmara Regional","Bakırköy / İstanbul","34","Türkiye",5,"Apr 2–4",46,40.9819,28.8772],
+["WEUR","Western European Regional","Eindhoven","NB","Netherlands",5,"Apr 1–4",26,51.4416,5.4697],
+["ALHU","Rocket City Regional","Huntsville","AL","USA",6,"Apr 7–10",40,34.7304,-86.5861],
+["CODE","Denver Regional","Denver","CO","USA",6,"Apr 7–10",25,39.7392,-104.9903],
+["MNMI2","Minnesota Granite City Regional","St. Cloud","MN","USA",6,"Apr 7–10",38,45.5579,-94.1632],
+["MOKC","Greater Kansas City Regional","Lee's Summit","MO","USA",6,"Apr 7–10",26,38.9108,-94.3822],
+["NYN2","Gotham Regional","New York","NY","USA",6,"Apr 5–7",26,40.7128,-74.0060],
+["NYNY","New York City Regional","New York","NY","USA",6,"Apr 8–11",0,40.7128,-74.0060],
+["OKTU","Green Country Regional","Tulsa","OK","USA",6,"Apr 7–10",36,36.1540,-95.9928],
+["QCMO","Festival de Robotique Regional","Dorval","QC","Canada",6,"Apr 7–10",30,45.4500,-73.7500],
+["TUIZ","İzmir Regional","Urla / İzmir","35","Türkiye",6,"Apr 9–11",30,38.3222,26.7644],
+["FLTA","Tallahassee Regional","Tallahassee","FL","USA",7,"Apr 15–18",38,30.4383,-84.2807],
+["MXLE","Regional Leon","León de los Aldama","GUA","Mexico",7,"Apr 14–17",22,21.1250,-101.6860],
+["NYBU","Buffalo Niagara Regional","Buffalo","NY","USA",7,"Apr 14–17",38,42.8864,-78.8784]
+].map(a=>({code:a[0],name:a[1],city:a[2],st:a[3],country:a[4],week:a[5],dates:a[6],cap:a[7],lat:a[8],lng:a[9]}));
+
+// Favourites are saved in this browser (localStorage) so they are still there on the next visit.
+// First visit only: start with the two same-city pairs from the research. Set STARTER=[] for a blank start.
+const KEY="frc27-favourites",STARTER=["CNGU1","CNGU2","TUIS","TUHC"];
+let saved=null;
+try{saved=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+const favs=new Set(Array.isArray(saved)?saved:STARTER);
+const saveFavs=()=>{try{localStorage.setItem(KEY,JSON.stringify([...favs]))}catch(e){}};
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+const map=L.map("map",{zoomControl:false,minZoom:2,maxZoom:20,worldCopyJump:true,zoomSnap:0,zoomDelta:1,wheelPxPerZoomLevel:90,
+  maxBounds:[[-85,-540],[85,540]],maxBoundsViscosity:.6}).setView([30,10],2.4);
+
+const esri=(k,o)=>L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/"+k+"/MapServer/tile/{z}/{y}/{x}",Object.assign({maxZoom:20,maxNativeZoom:19,attribution:"Tiles © Esri, HERE, Garmin, OpenStreetMap contributors"},o||{}));
+const street=esri("World_Street_Map");
+const sat=L.layerGroup([esri("World_Imagery"),esri("Reference/World_Boundaries_and_Places",{maxNativeZoom:18})]);
+let isSat=false;street.addTo(map);
+$("layer").onclick=()=>{
+  if(isSat){map.removeLayer(sat);street.addTo(map)}else{map.removeLayer(street);sat.addTo(map)}
+  isSat=!isSat;$("layer").textContent=isSat?"Map":"Sat";
+};
+L.control.scale({imperial:false,position:"bottomleft",maxWidth:110}).addTo(map);
+
+// one dot per regional. Events sharing a city are fanned a few pixels around the exact city centre.
+const byPt=new Map();
+E.forEach(e=>{const k=e.lat+","+e.lng;if(!byPt.has(k))byPt.set(k,[]);byPt.get(k).push(e)});
+E.forEach(e=>{const g=byPt.get(e.lat+","+e.lng);e.i=g.indexOf(e);e.n=g.length});
+const layer=L.layerGroup().addTo(map);
+let weekFilter="all";
+const visible=()=>E.filter(e=>weekFilter==="all"||(weekFilter==="fav"?favs.has(e.code):e.week===+weekFilter));
+const RING=getComputedStyle(document.documentElement).getPropertyValue("--dot-ring").trim();
+function place(e){
+  if(e.n<2)return[e.lat,e.lng];
+  const a=2*Math.PI*e.i/e.n-Math.PI/2,r=e.n>2?13:9,p=map.project([e.lat,e.lng]).add([Math.cos(a)*r,Math.sin(a)*r]);
+  return map.unproject(p);
+}
+const markers=[];
+function render(){
+  layer.clearLayers();markers.length=0;
+  const v=visible().sort((a,b)=>favs.has(a.code)-favs.has(b.code)); // yellow dots drawn last, on top
+  v.forEach(e=>{
+    const f=favs.has(e.code);
+    const m=L.circleMarker(place(e),{radius:f?9:7,weight:f?2.5:2,color:f?"#7a5f00":RING,fillColor:f?"#ffcc00":"#fff",fillOpacity:1,bubblingMouseEvents:false}).addTo(layer);
+    m.ev=e;markers.push(m);
+    m.bindPopup(()=>popupHtml(e),{closeButton:false,offset:[0,-4],autoPanPaddingTopLeft:[20,110],autoPanPaddingBottomRight:[20,20]});
+    m.on("popupopen",x=>{x.popup.getElement().querySelector("[data-c]").onclick=()=>openSheet(e.code)});
+  });
+  $("count").textContent=v.length+" regional"+(v.length===1?"":"s")+(weekFilter==="all"?" · Mar–Apr 2027":weekFilter==="fav"?" · favourites":" · week "+weekFilter);
+}
+map.on("zoomend",()=>markers.forEach(m=>m.setLatLng(place(m.ev))));
+function popupHtml(e){
+  const d=document.createElement("div");
+  d.innerHTML='<div class="pcity">'+esc(e.city)+'</div><button class="pbtn" data-c="'+e.code+'"><span>'+(favs.has(e.code)?'<span class="st">★</span> ':'')+esc(e.name)+'<small>Week '+e.week+' · '+e.dates+' · tap for details</small></span></button>';
+  return d;
+}
+
+function openSheet(code){
+  const e=fillSheet(code);if(!e)return;
+  map.closePopup();
+  map.flyTo([e.lat,e.lng],Math.max(map.getZoom(),8),{duration:.7});
+}
+function fillSheet(code){
+  const e=E.find(x=>x.code===code);if(!e)return null;
+  const f=favs.has(code);
+  const loc=[e.city,e.st,e.country].filter(Boolean).join(", ");
+  $("sheet").innerHTML='<div class="grab"></div>'+
+   '<div class="sh-h"><h2>'+esc(e.name)+'</h2><button class="x" id="sx" aria-label="Close">✕</button></div>'+
+   '<p class="sub">'+esc(loc)+'</p>'+
+   '<div class="badges"><span class="b">'+e.code+'</span><span class="b">Week '+e.week+'</span><span class="b">Regional</span>'+(f?'<span class="b fv">★ Favourite</span>':'')+'</div>'+
+   '<dl><dt>Dates</dt><dd>'+e.dates+', 2027</dd>'+
+    '<dt>City</dt><dd>'+esc(e.city)+'</dd>'+
+    '<dt>State / Province</dt><dd>'+esc(e.st||"—")+'</dd>'+
+    '<dt>Country</dt><dd>'+esc(e.country)+'</dd>'+
+    '<dt>Team capacity</dt><dd>'+(e.cap?e.cap+' teams':'Not announced')+'</dd>'+
+    '<dt>City centre</dt><dd>'+e.lat.toFixed(4)+', '+e.lng.toFixed(4)+'</dd></dl>'+
+   '<div class="acts"><button class="act'+(f?' on':'')+'" id="sf" aria-pressed="'+f+'">'+(f?'★ Favourited':'☆ Add to favourites')+'</button>'+
+    '<a class="act p" target="_blank" rel="noopener" href="https://frc-events.firstinspires.org/2027/'+e.code+'">FIRST event page</a>'+
+    '<a class="act" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query='+e.lat+','+e.lng+'">Open in Maps</a></div>'+
+   '<p class="note">The dot is placed at the centre of '+esc(e.city)+(e.n>1?' and nudged a few pixels so the '+e.n+' events there can be tapped separately':'')+'. FIRST has not published venue addresses yet, so this is the city, not the arena.</p>';
+  $("sheet").classList.add("open");
+  $("sx").onclick=closeSheet;
+  $("sf").onclick=()=>{
+    f?favs.delete(code):favs.add(code);saveFavs();render();
+    if(weekFilter==="fav"&&f)closeSheet();else fillSheet(code);
+  };
+  return e;
+}
+function closeSheet(){$("sheet").classList.remove("open")}
+map.on("click",closeSheet);
+addEventListener("resize",()=>map.invalidateSize());
+addEventListener("orientationchange",()=>setTimeout(()=>map.invalidateSize(),250));
+if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{});
+addEventListener("storage",ev=>{if(ev.key!==KEY)return;try{const a=JSON.parse(ev.newValue);favs.clear();(a||[]).forEach(c=>favs.add(c));render()}catch(e){}});
+document.addEventListener("keydown",k=>{if(k.key==="Escape")closeSheet()});
+
+$("zin").onclick=()=>map.zoomIn();
+$("zout").onclick=()=>map.zoomOut();
+$("fit").onclick=()=>{
+  const pts=visible().map(e=>[e.lat,e.lng]);
+  if(pts.length)map.flyToBounds(pts,{padding:[70,70],maxZoom:12,duration:.8});
+};
+const ml=()=>{const z=map.getZoom();$("zoomlbl").textContent="Zoom "+z.toFixed(1)+(z>=19.5?" · street level":"")};
+map.on("zoom",ml);ml();
+
+const chips=$("chips");
+[["all","All"],["fav","★ Favourites"],[1,"Wk 1"],[2,"Wk 2"],[3,"Wk 3"],[4,"Wk 4"],[5,"Wk 5"],[6,"Wk 6"],[7,"Wk 7"]].forEach(([v,l])=>{
+  const b=document.createElement("button");b.className="chip"+(v==="fav"?" fav":"");b.textContent=l;
+  b.setAttribute("aria-pressed",String(v==="all"));
+  b.onclick=()=>{weekFilter=String(v);chips.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",String(c===b)));render();$("fit").click()};
+  chips.appendChild(b);
+});
+render();
+</script>
+</body>
+</html>
