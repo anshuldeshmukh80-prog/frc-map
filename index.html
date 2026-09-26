@@ -94,6 +94,47 @@ dt{color:var(--ink2)}dd{margin:0;font-variant-numeric:tabular-nums;text-align:ri
 .leaflet-container .maplibregl-canvas{outline:none}
 .note{margin-top:14px;font-size:11.5px;color:var(--ink2);line-height:1.4}
 .leaflet-interactive{cursor:pointer}
+/* week chips: swatch, label and the week's date range */
+.chip.wk{padding:6px 12px}
+.chip.wk .t{display:flex;flex-direction:column;gap:2px;text-align:left}
+.chip.wk small{font-size:10px;font-weight:500;opacity:.85;font-variant-numeric:tabular-nums}
+/* bars under the chips: intro, warnings, compare mode, shared shortlist */
+#bars{display:flex;flex-direction:column;gap:6px;align-items:flex-start;max-width:min(520px,100%)}
+.bar{pointer-events:auto;display:flex;align-items:center;gap:10px;border-radius:12px;padding:8px 10px 8px 12px;font-size:12.5px;line-height:1.35}
+.bar span{flex:1}
+.bar button{flex:none;border:0;border-radius:8px;padding:6px 10px;font:inherit;font-weight:700;background:var(--chip);color:var(--ink);cursor:pointer}
+.bar.info button.go{background:var(--accent);color:#fff}
+@media (orientation:landscape) and (max-height:520px){#bar-intro{display:none}}   /* no room on a phone turned sideways */
+.bar.warn{background:#ffe9b3;color:#3d2c00;border-color:#e0b84a}
+.bar.warn button{background:#fff3cf;color:#3d2c00}
+@media (prefers-color-scheme:dark){.bar.warn{background:#4a3a0c;color:#ffeab0;border-color:#8a6d1c}.bar.warn button{background:#5c4a12;color:#ffeab0}}
+#toast{position:absolute;z-index:1000;left:50%;bottom:calc(70px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;pointer-events:none;
+  background:#1c1c1e;color:#fff;font-size:13px;padding:10px 14px;border-radius:12px;box-shadow:var(--shadow);transition:.25s;max-width:86vw;text-align:center}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+/* compare + lists in the sheet */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.stats div{background:var(--chip);border-radius:12px;padding:10px 6px;text-align:center}
+.stats b{display:block;font-size:17px;font-variant-numeric:tabular-nums}
+.stats small{color:var(--ink2);font-size:11px}
+.verdict{border-radius:12px;padding:10px 12px;font-size:13.5px;font-weight:600;line-height:1.35}
+.verdict.good{background:#d8f5df;color:#0b3d1a}.verdict.ok{background:#dcecff;color:#0a2f5c}
+.verdict.warn{background:#ffe9b3;color:#3d2c00}.verdict.bad{background:#ffd9d6;color:#5c0d08}
+@media (prefers-color-scheme:dark){.verdict.good{background:#12381f;color:#bff0cb}.verdict.ok{background:#12294a;color:#c5deff}.verdict.warn{background:#4a3a0c;color:#ffeab0}.verdict.bad{background:#4d1613;color:#ffd0cc}}
+.cmp-ev{display:flex;gap:10px;align-items:flex-start;padding:8px 0}
+.cmp-ev b{display:block;font-size:14.5px}.cmp-ev small{display:block;color:var(--ink2);font-size:12px;line-height:1.35}
+.sw2{width:12px;height:12px;border-radius:50%;flex:none;margin-top:4px;box-shadow:0 0 0 1.5px rgba(0,0,0,.35)}
+.arrow{color:var(--ink2);font-size:12px;padding:0 0 0 22px}
+h3{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);margin:18px 0 6px}
+.rows{display:flex;flex-direction:column}
+.row{display:flex;gap:10px;align-items:center;text-align:left;width:100%;border:0;background:none;color:var(--ink);font:inherit;padding:9px 0;cursor:pointer;border-top:1px solid var(--glass-b)}
+.row:first-child{border-top:0}
+.row b{display:block;font-size:14px}.row small{display:block;color:var(--ink2);font-size:12px}
+.row .lv{margin-left:auto;font-size:11px;font-weight:700;padding:3px 7px;border-radius:8px;flex:none}
+.lv.good{background:#d8f5df;color:#0b3d1a}.lv.ok{background:#dcecff;color:#0a2f5c}.lv.warn{background:#ffe9b3;color:#3d2c00}.lv.bad{background:#ffd9d6;color:#5c0d08}
+.chgnote{margin-top:12px;background:#ffe9b3;color:#3d2c00;border-radius:10px;padding:8px 10px;font-size:12.5px;line-height:1.4}
+@media (prefers-color-scheme:dark){.chgnote{background:#4a3a0c;color:#ffeab0}}
+.pchg{color:#b36b00;font-weight:600}
+input.linkbox{width:100%;font:inherit;font-size:13px;padding:10px;border-radius:10px;border:1px solid var(--glass-b);background:var(--chip);color:var(--ink)}
 </style>
 </head>
 <body>
@@ -102,6 +143,7 @@ dt{color:var(--ink2)}dd{margin:0;font-variant-numeric:tabular-nums;text-align:ri
 <div id="top">
   <div id="title" class="glass"><b>FRC 2027 Regionals</b><span id="count"></span></div>
   <div id="chips" role="group" aria-label="Filter by week"></div>
+  <div id="bars"></div>
 </div>
 
 <div id="ctl">
@@ -111,7 +153,9 @@ dt{color:var(--ink2)}dd{margin:0;font-variant-numeric:tabular-nums;text-align:ri
   </div>
   <button id="layer" class="solo glass" aria-label="Switch map type">Sat</button>
   <button id="fit" class="solo glass" aria-label="Show all regionals">All</button>
+  <button id="share" class="solo glass" aria-label="Share my shortlist">Share</button>
 </div>
+<div id="toast" role="status" aria-live="polite"></div>
 <div id="zoomlbl" class="glass"></div>
 
 <section id="sheet" aria-live="polite"></section>
@@ -186,11 +230,12 @@ let E=[
 ["MXLE","Regional Leon","León de los Aldama","GUA","Mexico",7,"Apr 14–17",22,21.1250,-101.6860],
 ["NYBU","Buffalo Niagara Regional","Buffalo","NY","USA",7,"Apr 14–17",38,42.8864,-78.8784]
 ].map(norm);
-let synced="";
+const BUILTIN_DATE="2026-09-25";        // when the built-in list above was written
+let dataState="builtin",checkedISO="",removedList=[];   // becomes "live" once events.json loads
 
 // Favourites are saved in this browser (localStorage) so they are still there on the next visit.
-// First visit only: start with the two same-city pairs from the research. Set STARTER=[] for a blank start.
-const KEY="frc27-favourites",STARTER=["CNGU1","CNGU2","TUIS","TUHC"];
+// Nobody starts with stars any more. Use the Share button to send your shortlist to the team as a link.
+const KEY="frc27-favourites",STARTER=[];
 let saved=null;
 try{saved=JSON.parse(localStorage.getItem(KEY))}catch(e){}
 const favs=new Set(Array.isArray(saved)?saved:STARTER);
@@ -198,6 +243,59 @@ const saveFavs=()=>{try{localStorage.setItem(KEY,JSON.stringify([...favs]))}catc
 
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+// ---- dates, distances, pairs ---------------------------------------------------------------
+const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],DAY=864e5;
+function span(e){   // start and end of an event as UTC milliseconds. Uses start/end from events.json, or reads "Mar 31–Apr 3" from the built-in list.
+  if(e._span)return e._span;
+  let s,t;
+  if(e.start&&e.end){s=Date.parse(e.start);t=Date.parse(e.end)}
+  else{
+    const m=/^([A-Za-z]{3}) (\d+)–(?:([A-Za-z]{3}) )?(\d+)$/.exec(e.dates||"");
+    if(m){const a=MON.indexOf(m[1]),b=m[3]?MON.indexOf(m[3]):a;s=Date.UTC(2027,a,+m[2]);t=Date.UTC(2027,b,+m[4])}
+  }
+  return e._span={s,t};
+}
+const fmtDay=ms=>{const d=new Date(ms);return MON[d.getUTCMonth()]+" "+d.getUTCDate()};
+const fmtRange=(a,b)=>new Date(a).getUTCMonth()===new Date(b).getUTCMonth()?fmtDay(a)+"–"+new Date(b).getUTCDate():fmtDay(a)+"–"+fmtDay(b);
+const fullDate=iso=>{const d=new Date(iso+"T00:00:00Z");return d.getUTCDate()+" "+MON[d.getUTCMonth()]+" "+d.getUTCFullYear()};
+const ageDays=iso=>Math.floor((Date.parse(new Date().toISOString().slice(0,10))-Date.parse(iso))/DAY);
+function kmBetween(a,b){
+  const R=6371,t=x=>x*Math.PI/180,h=Math.sin(t(b.lat-a.lat)/2)**2+Math.cos(t(a.lat))*Math.cos(t(b.lat))*Math.sin(t(b.lng-a.lng)/2)**2;
+  return 2*R*Math.asin(Math.sqrt(h));
+}
+const fmtKm=k=>k<1?"same place":Math.round(k).toLocaleString("en")+" km";
+function pair(a,b){   // how two events fit together: distance, days between, and a plain verdict
+  const [f,l]=span(a).s<=span(b).s?[a,b]:[b,a];
+  const gap=Math.round((span(l).s-span(f).t)/DAY)-1;      // whole days between the end of the first and the start of the second
+  const km=kmBetween(a,b);
+  let level,text;
+  if(gap<0){level="bad";text="These two overlap, so you cannot attend both."}
+  else if(km<100){   // same city or region: the robot does not travel far, so a short gap is fine
+    level=gap<1?"warn":"good";
+    text=(km<1?"Same venue":"Same area")+", so no long shipping. "+(gap<1?"They run back to back with no free day between.":gap+" day"+(gap===1?"":"s")+" between them.");
+  }
+  else if(gap<=5){level="warn";text="Tight: only "+gap+" day"+(gap===1?"":"s")+" between them. Shipping and rebuilding the robot is the risk."}
+  else if(gap<=13){level="ok";text=gap+" days between them. Workable if you plan the robot shipping early."}
+  else{level="good";text=gap+" days between them. Comfortable."}
+  return {f,l,gap,km,level,text};
+}
+const LV={good:"Comfortable",ok:"Workable",warn:"Tight",bad:"Overlap"};
+
+// ---- small UI helpers --------------------------------------------------------------------
+let toastTimer;
+function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),3200)}
+function setBar(id,cls,html){   // one bar under the chips; pass null to remove it
+  let el=$(id);
+  if(html==null){if(el)el.remove();return null}
+  if(!el){el=document.createElement("div");el.id=id;$("bars").appendChild(el)}
+  el.className="bar glass "+cls;el.innerHTML=html;return el;
+}
+function panel(html){   // fills the bottom card / side card with something other than an event
+  $("sheet").innerHTML='<div class="grab"></div>'+html;
+  $("sheet").classList.add("open");
+  const x=$("sheet").querySelector(".x");if(x)x.onclick=closeSheet;
+}
 
 const map=L.map("map",{zoomControl:false,minZoom:2,maxZoom:20,worldCopyJump:true,zoomSnap:0,zoomDelta:1,wheelPxPerZoomLevel:90,
   maxBounds:[[-85,-540],[85,540]],maxBoundsViscosity:.6}).setView([30,10],2.4);
@@ -264,7 +362,7 @@ function dotIcon(e){
   const base=byWeek?WEEK_COL[e.week]||"#fff":"#fff";
   if(fav){
     // Favourite = star. Gold on its own; with weeks on it is split down the middle: week colour left, gold right.
-    const S=32,c=S/2,pts=starPts(c,c+.6,13,5.4),id="h"+e.code.replace(/W/g,"");
+    const S=32,c=S/2,pts=starPts(c,c+.6,13,5.4),id="h"+e.code.replace(/\W/g,"");
     const body=byWeek
       ?'<defs><clipPath id="'+id+'"><rect x="0" y="0" width="'+c+'" height="'+S+'"/></clipPath></defs>'+
        '<polygon points="'+pts+'" fill="'+GOLD+'"/><polygon points="'+pts+'" fill="'+base+'" clip-path="url(#'+id+')"/>'+
@@ -274,9 +372,11 @@ function dotIcon(e){
     return L.divIcon({className:"dot",iconSize:[S,S],iconAnchor:[c,c+.6],popupAnchor:[0,-14],
       html:'<svg width="'+S+'" height="'+S+'" viewBox="0 0 '+S+' '+S+'" aria-hidden="true">'+body+'</svg>'});
   }
-  const r=7,S=26,c=S/2;
+  // With weeks on, the week number is printed on the dot too, so colour is never the only clue.
+  const r=byWeek?9:7,S=28,c=S/2;
+  const num=byWeek?'<text x="'+c+'" y="'+(c+3.8)+'" text-anchor="middle" font-size="11" font-weight="700" font-family="system-ui,sans-serif" fill="'+(WEEK_TXT[e.week]||"#000")+'">'+e.week+'</text>':'';
   return L.divIcon({className:"dot",iconSize:[S,S],iconAnchor:[c,c],popupAnchor:[0,-r-2],
-    html:'<svg width="'+S+'" height="'+S+'" viewBox="0 0 '+S+' '+S+'" aria-hidden="true"><circle cx="'+c+'" cy="'+c+'" r="'+r+'" fill="'+base+'" stroke="'+RING+'" stroke-width="2"/></svg>'});
+    html:'<svg width="'+S+'" height="'+S+'" viewBox="0 0 '+S+' '+S+'" aria-hidden="true"><circle cx="'+c+'" cy="'+c+'" r="'+r+'" fill="'+base+'" stroke="'+RING+'" stroke-width="2"/>'+num+'</svg>'});
 }
 const markers=[];
 function render(){
@@ -287,13 +387,18 @@ function render(){
     m.ev=e;markers.push(m);
     m.bindPopup(()=>popupHtml(e),{closeButton:false,autoPanPaddingTopLeft:[20,110],autoPanPaddingBottomRight:[20,20]});
     m.on("popupopen",x=>{x.popup.getElement().querySelector("[data-c]").onclick=()=>openSheet(e.code)});
+    m.on("click",()=>{   // compare mode: the next dot you tap is the second event
+      if(cmpFrom&&cmpFrom!==e.code){const a=cmpFrom;m.closePopup();endCompare();showCompare(a,e.code)}
+    });
   });
-  $("count").textContent=v.length+" regional"+(v.length===1?"":"s")+" · "+filterLabel()+(synced?" · synced "+synced:"");
+  $("count").textContent=v.length+" regional"+(v.length===1?"":"s")+" · "+filterLabel()+" · "+
+    (dataState==="live"?"checked "+fullDate(checkedISO):"built-in list "+fullDate(BUILTIN_DATE));
+  favBar();
 }
 map.on("zoomend",()=>markers.forEach(m=>m.setLatLng(place(m.ev))));
 function popupHtml(e){
   const d=document.createElement("div");
-  d.innerHTML='<div class="pcity">'+esc(e.city)+'</div><button class="pbtn" data-c="'+e.code+'"><span>'+(favs.has(e.code)?starIcon(true,"ico st")+' ':'')+esc(e.name)+'<small>Week '+e.week+' · '+e.dates+' · tap for details</small></span></button>';
+  d.innerHTML='<div class="pcity">'+esc(e.city)+'</div><button class="pbtn" data-c="'+e.code+'"><span>'+(favs.has(e.code)?starIcon(true,"ico st")+' ':'')+esc(e.name)+'<small>Week '+e.week+' · '+e.dates+' · tap for details</small>'+(e.changed?'<small class="pchg">Updated '+fmtDay(Date.parse(e.changed.on))+'</small>':'')+'</span></button>';
   return d;
 }
 
@@ -316,27 +421,169 @@ function fillSheet(code){
     '<dt>State / Province</dt><dd>'+esc(e.st||"—")+'</dd>'+
     '<dt>Country</dt><dd>'+esc(e.country)+'</dd>'+
     '<dt>Team capacity</dt><dd>'+(e.cap?e.cap+' teams':'Not announced')+'</dd>'+
-    '<dt>'+(e.precise?'Venue location':'City centre')+'</dt><dd>'+e.lat.toFixed(4)+', '+e.lng.toFixed(4)+'</dd></dl>'+
-   '<div class="acts"><button class="act'+(f?' on':'')+'" id="sf" aria-pressed="'+f+'">'+(f?starIcon(true,"ico")+' Favourited':starIcon(false,"ico")+' Add to favourites')+'</button>'+
-    '<a class="act p" target="_blank" rel="noopener" href="https://frc-events.firstinspires.org/2027/'+e.code+'">FIRST event page</a>'+
+    '<dt>Pin</dt><dd>'+(e.approx?'Approximate (about 2 km)':e.precise?'Matched to the venue':'City centre only')+'</dd>'+
+    '<dt>Coordinates</dt><dd>'+e.lat.toFixed(4)+', '+e.lng.toFixed(4)+'</dd></dl>'+
+   (e.changed?'<div class="chgnote"><b>Updated '+fmtDay(Date.parse(e.changed.on))+'.</b> '+e.changed.what.map(w=>esc(w).replace("-&gt;","→")).join("; ")+'</div>':'')+
+   '<div class="acts"><a class="act p" target="_blank" rel="noopener" href="https://frc-events.firstinspires.org/2027/'+e.code+'">Verify on FIRST</a>'+
+    '<button class="act" id="scmp">Compare with…</button>'+
+    '<button class="act'+(f?' on':'')+'" id="sf" aria-pressed="'+f+'">'+(f?starIcon(true,"ico")+' Favourited':starIcon(false,"ico")+' Add to favourites')+'</button>'+
     '<a class="act" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query='+(e.precise?encodeURIComponent(e.venue+' '+e.addr):e.lat+','+e.lng)+'">Open in Maps</a></div>'+
-   '<p class="note">'+(e.precise?'The dot is on the venue, taken from the official FIRST event page and matched to a map location.':'FIRST has not listed a venue for this event yet, so the dot is at the centre of '+esc(e.city)+'.')+(e.n>1?' '+e.n+' events share this spot, so their dots are nudged a few pixels apart.':'')+'</p>';
+   '<h3>Closest regionals you could also attend</h3>'+closestRows(e)+
+   '<p class="note">'+pinNote(e)+' Always confirm dates and the address on the FIRST page before you book.</p>';
 
   $("sheet").classList.add("open");
   $("sx").onclick=closeSheet;
+  $("scmp").onclick=()=>startCompare(code);
+  $("sheet").querySelectorAll("[data-cmp]").forEach(b=>b.onclick=()=>showCompare(code,b.dataset.cmp));
   $("sf").onclick=()=>{
     f?favs.delete(code):favs.add(code);saveFavs();render();
     if(favOnly&&f)closeSheet();else fillSheet(code);
   };
   return e;
 }
-function closeSheet(){$("sheet").classList.remove("open")}
+function pinNote(e){
+  const n=e.n>1?' '+e.n+' events share this spot, so their dots are nudged a few pixels apart.':'';
+  if(e.approx)return 'The dot is close to the venue. FIRST lists it, but the map search could not find it exactly, so the pin was placed by hand and can be about 2 km off.'+n;
+  if(e.precise)return 'The dot is on the venue, matched from the address on FIRST\'s event page.'+n;
+  if(e.venue)return 'FIRST lists a venue, but it could not be placed on the map automatically, so the dot is at the centre of '+esc(e.city)+'.'+n;
+  return 'FIRST has not listed a venue for this event yet, so the dot is at the centre of '+esc(e.city)+'.'+n;
+}
+
+// ---- closest events, compare, pairs ------------------------------------------------------
+function closestRows(e){   // the 5 nearest other regionals that do not overlap this one in time
+  const list=E.filter(x=>x.code!==e.code).map(x=>({x,p:pair(e,x)})).filter(o=>o.p.gap>=0)
+    .sort((a,b)=>a.p.km-b.p.km||a.p.gap-b.p.gap).slice(0,5);
+  if(!list.length)return '<p class="note">No other regionals to compare.</p>';
+  return '<div class="rows">'+list.map(({x,p})=>
+    '<button class="row" data-cmp="'+x.code+'"><i class="sw2" style="background:'+(WEEK_COL[x.week]||"#ccc")+'"></i><span><b>'+esc(x.name)+'</b>'+
+    '<small>'+esc(x.city)+' · '+fmtKm(p.km)+' · '+p.gap+' day'+(p.gap===1?'':'s')+(span(x).s>span(e).s?' after':' before')+'</small></span>'+
+    '<span class="lv '+p.level+'">'+LV[p.level]+'</span></button>').join('')+'</div>';
+}
+let cmpFrom=null,cmpLine=null;
+function clearLine(){if(cmpLine){map.removeLayer(cmpLine);cmpLine=null}}
+function startCompare(code){
+  const e=E.find(x=>x.code===code);if(!e)return;
+  closeSheet();cmpFrom=code;
+  setBar("bar-cmp","info","<span>Comparing with <b>"+esc(e.name)+"</b>. Tap another dot.</span><button id=\"cmp-x\">Cancel</button>");
+  $("cmp-x").onclick=endCompare;
+}
+function endCompare(){cmpFrom=null;setBar("bar-cmp","",null)}
+function showCompare(ca,cb){
+  const a=E.find(x=>x.code===ca),b=E.find(x=>x.code===cb);if(!a||!b)return;
+  const p=pair(a,b),wk=Math.abs(a.week-b.week);
+  const ev=e=>'<div class="cmp-ev"><i class="sw2" style="background:'+(WEEK_COL[e.week]||"#ccc")+'"></i><div><b>'+esc(e.name)+'</b>'+
+    '<small>'+esc(e.city)+', '+esc(e.country)+' · Week '+e.week+' · '+esc(e.dates)+'</small>'+
+    '<small>'+(e.venue?esc(e.venue):'Venue not listed yet')+'</small></div></div>';
+  const first='https://frc-events.firstinspires.org/2027/';
+  panel('<div class="sh-h"><h2>Compare</h2><button class="x" aria-label="Close">✕</button></div>'+
+    ev(p.f)+'<div class="arrow">then</div>'+ev(p.l)+
+    '<div class="stats"><div><b>'+fmtKm(p.km)+'</b><small>straight-line apart</small></div>'+
+    '<div><b>'+(p.gap<0?'Overlap':p.gap+' day'+(p.gap===1?'':'s'))+'</b><small>between events</small></div>'+
+    '<div><b>'+wk+' week'+(wk===1?'':'s')+'</b><small>apart</small></div></div>'+
+    '<div class="verdict '+p.level+'">'+p.text+'</div>'+
+    '<div class="acts"><a class="act p" target="_blank" rel="noopener" href="'+first+p.f.code+'">Verify '+esc(p.f.code)+' on FIRST</a>'+
+    '<a class="act p" target="_blank" rel="noopener" href="'+first+p.l.code+'">Verify '+esc(p.l.code)+' on FIRST</a></div>'+
+    '<p class="note">Distance is a straight line between the two pins, not travel time. It does not know about registration limits, waitlists, visas or shipping rules, so check those on the FIRST pages.</p>');
+  clearLine();
+  cmpLine=L.polyline([[a.lat,a.lng],[b.lat,b.lng]],{color:"#0a84ff",weight:3,opacity:.9,dashArray:"7 8"}).addTo(map);
+  if(p.km<1)map.flyTo([a.lat,a.lng],15,{duration:.7});
+  else{   // frame both pins in the part of the screen the card does not cover
+    const side=matchMedia("(min-width:560px),(orientation:landscape) and (max-height:520px)").matches;
+    const tl=side?[Math.min(380,innerWidth*.46)+50,150]:[50,170],br=side?[90,80]:[80,Math.round(innerHeight*.56)];
+    map.flyToBounds([[a.lat,a.lng],[b.lat,b.lng]],{paddingTopLeft:tl,paddingBottomRight:br,maxZoom:14,duration:.8});
+  }
+}
+function showPairs(){   // every pair among your favourites, best first
+  const fv=E.filter(e=>favs.has(e.code));
+  const out=[];
+  for(let i=0;i<fv.length;i++)for(let j=i+1;j<fv.length;j++)out.push({a:fv[i],b:fv[j],p:pair(fv[i],fv[j])});
+  out.sort((x,y)=>(x.p.level==="bad")-(y.p.level==="bad")||x.p.km-y.p.km||y.p.gap-x.p.gap);   // closest first, overlaps last
+  panel('<div class="sh-h"><h2>Your '+fv.length+' favourites, paired</h2><button class="x" aria-label="Close">✕</button></div>'+
+    '<p class="sub">Closest pairs first, overlaps last. Tap a pair to see it on the map.</p><div class="rows">'+out.slice(0,15).map(o=>
+      '<button class="row" data-pa="'+o.a.code+'" data-pb="'+o.b.code+'"><span><b>'+esc(o.p.f.name)+' + '+esc(o.p.l.name)+'</b>'+
+      '<small>'+fmtKm(o.p.km)+' · '+(o.p.gap<0?'overlap':o.p.gap+' day'+(o.p.gap===1?'':'s')+' between')+'</small></span>'+
+      '<span class="lv '+o.p.level+'">'+LV[o.p.level]+'</span></button>').join('')+'</div>'+
+    (out.length>15?'<p class="note">Showing the best 15 of '+out.length+' pairs.</p>':''));
+  $("sheet").querySelectorAll("[data-pa]").forEach(b=>b.onclick=()=>showCompare(b.dataset.pa,b.dataset.pb));
+}
+function favBar(){   // while the Favourites filter is on and you have two or more, offer the pair list
+  if(favOnly&&favs.size>=2){
+    setBar("bar-fav","info","<span>You have "+favs.size+" favourites.</span><button class=\"go\" id=\"fav-go\">See best pairs</button>");
+    $("fav-go").onclick=showPairs;
+  }else setBar("bar-fav","",null);
+}
+function closeSheet(){$("sheet").classList.remove("open");clearLine()}
 map.on("click",closeSheet);
 addEventListener("resize",()=>map.invalidateSize());
 addEventListener("orientationchange",()=>setTimeout(()=>map.invalidateSize(),250));
 if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{});
 addEventListener("storage",ev=>{if(ev.key!==KEY)return;try{const a=JSON.parse(ev.newValue);favs.clear();(a||[]).forEach(c=>favs.add(c));render()}catch(e){}});
-document.addEventListener("keydown",k=>{if(k.key==="Escape")closeSheet()});
+document.addEventListener("keydown",k=>{if(k.key==="Escape"){closeSheet();endCompare()}});
+
+// ---- share a shortlist -------------------------------------------------------------------
+function shortlistUrl(){
+  const q=[];
+  if(favs.size)q.push("fav="+[...favs].join(","));
+  if(weeksOn.size)q.push("wk="+[...weeksOn].sort((a,b)=>a-b).join(","));
+  return location.origin+location.pathname+(q.length?"?"+q.join("&"):"");
+}
+$("share").onclick=async()=>{
+  if(!favs.size){toast("Star some regionals first, then share your shortlist.");return}
+  const url=shortlistUrl();
+  try{if(navigator.share){await navigator.share({title:"FRC 2027 regionals shortlist",text:"My shortlist: "+favs.size+" regionals",url});return}}
+  catch(e){if(e&&e.name==="AbortError")return}
+  try{await navigator.clipboard.writeText(url);toast("Link copied. Paste it in your team chat.")}
+  catch(e){
+    panel('<div class="sh-h"><h2>Your shortlist link</h2><button class="x" aria-label="Close">✕</button></div><p class="sub">Copy this link and send it to your team.</p><input class="linkbox" id="lb" readonly value="'+esc(url)+'">');
+    const lb=$("lb");lb.focus();lb.select();
+  }
+};
+function applySharedParams(){   // opens a link like ?fav=CNGU1,TUIS&wk=4,5
+  const q=new URLSearchParams(location.search);
+  if(![...q.keys()].length)return;
+  const f=(q.get("fav")||"").split(",").map(s=>s.trim().toUpperCase()).filter(c=>E.some(e=>e.code===c));
+  const w=(q.get("wk")||"").split(",").map(Number).filter(n=>n>=1&&n<=7);
+  history.replaceState(null,"",location.pathname);
+  if(w.length){w.forEach(x=>weeksOn.add(x));syncChips();render();$("fit").click()}
+  if(!f.length)return;
+  const mine=[...favs].sort().join(),theirs=[...new Set(f)].sort().join();
+  if(mine===theirs)return;
+  const names=f.map(c=>E.find(e=>e.code===c).name).slice(0,3).join(", ")+(f.length>3?" and "+(f.length-3)+" more":"");
+  const apply=()=>{favs.clear();f.forEach(c=>favs.add(c));saveFavs();setBar("bar-share","",null);favOnly=false;syncChips();render();toast("Loaded "+f.length+" shared regionals.")};
+  if(!favs.size)apply();
+  else{
+    setBar("bar-share","info","<span>This link has a shortlist of "+f.length+": "+esc(names)+".</span><button class=\"go\" id=\"sh-use\">Use it</button><button id=\"sh-keep\">Keep mine</button>");
+    $("sh-use").onclick=apply;$("sh-keep").onclick=()=>setBar("bar-share","",null);
+  }
+}
+
+// ---- trust: freshness, recent changes, first-visit hint -----------------------------------------
+function freshness(){
+  if(dataState==="builtin")
+    setBar("bar-warn","warn","<span>Could not load the latest data, so this is the built-in list from "+fullDate(BUILTIN_DATE)+". Dates may be out of date. Check the FIRST page before you book anything.</span>");
+  else if(ageDays(checkedISO)>2)
+    setBar("bar-warn","warn","<span>This data was last checked "+ageDays(checkedISO)+" days ago ("+fullDate(checkedISO)+"). The automatic update may have stopped. Check the FIRST page before you book anything.</span>");
+  else setBar("bar-warn","",null);
+}
+function changesBar(){
+  const n=E.filter(e=>e.changed).length+removedList.length;
+  if(!n){setBar("bar-chg","",null);return}
+  setBar("bar-chg","warn","<span>"+n+" recent change"+(n===1?"":"s")+" on FIRST's list.</span><button id=\"chg-go\">See</button>");
+  $("chg-go").onclick=showChanges;
+}
+function showChanges(){
+  const ch=E.filter(e=>e.changed);
+  panel('<div class="sh-h"><h2>Recent changes</h2><button class="x" aria-label="Close">✕</button></div><p class="sub">Changes the automatic update found on FIRST\'s list in the last 14 days.</p><div class="rows">'+
+    ch.map(e=>'<button class="row" data-open="'+e.code+'"><span><b>'+esc(e.name)+'</b><small>'+fmtDay(Date.parse(e.changed.on))+': '+e.changed.what.map(w=>esc(w).replace("-&gt;","→")).join("; ")+'</small></span></button>').join('')+
+    removedList.map(r=>'<div class="row"><span><b>'+esc(r.name)+'</b><small>'+fmtDay(Date.parse(r.on))+': removed from FIRST\'s list</small></span></div>').join('')+'</div>');
+  $("sheet").querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>openSheet(b.dataset.open));
+}
+function introBar(){
+  let seen=false;try{seen=localStorage.getItem("frc27-intro")==="1"}catch(e){}
+  if(seen)return;
+  setBar("bar-intro","info","<span>"+E.length+" regionals. Pick two that are close in place and dates. Tap a dot, then its name, then <b>Compare with…</b>.</span><button id=\"intro-x\" aria-label=\"Dismiss\">✕</button>");
+  $("intro-x").onclick=()=>{setBar("bar-intro","",null);try{localStorage.setItem("frc27-intro","1")}catch(e){}};
+}
 
 $("zin").onclick=()=>map.zoomIn();
 $("zout").onclick=()=>map.zoomOut();
@@ -360,7 +607,9 @@ function syncChips(){
   if(typeof v==="number"){   // week chips carry their colour: a small swatch, and the whole chip fills with it when on
     b.className="chip wk";b.textContent="";
     b.style.setProperty("--wc",WEEK_COL[v]);b.style.setProperty("--wt",WEEK_TXT[v]);
-    const sw=document.createElement("i");sw.className="sw";b.append(sw,l);
+    const sw=document.createElement("i");sw.className="sw";
+    const t=document.createElement("span");t.className="t";t.innerHTML=l+'<small id="wr'+v+'"></small>';
+    b.append(sw,t);
   }
   b.onclick=()=>{
     if(v==="all"){weeksOn.clear();favOnly=false}                 // All = clear every filter
@@ -370,18 +619,27 @@ function syncChips(){
   };
   chipEls[v]=b;chips.appendChild(b);
 });
+function weekRanges(){   // date range under each week chip, worked out from the data
+  for(let w=1;w<=7;w++){
+    const ev=E.filter(e=>e.week===w&&span(e).s);
+    const el=$("wr"+w);if(!el)continue;
+    el.textContent=ev.length?fmtRange(Math.min(...ev.map(e=>span(e).s)),Math.max(...ev.map(e=>span(e).t))):"";
+  }
+}
 syncChips();
+weekRanges();
 render();
+introBar();
 
-// Pull the latest list that the sync job wrote to events.json.
-fetch("events.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>{
-  if(!d||!Array.isArray(d.events)||d.events.length<30)return;
+// Pull the latest list that the sync job wrote to events.json. If that fails, the built-in list stays and a warning shows.
+fetch("events.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error("HTTP "+r.status);return r.json()}).then(d=>{
+  if(!d||!Array.isArray(d.events)||d.events.length<30||!/^\d{4}-\d\d-\d\d$/.test(d.checked||""))throw new Error("bad data");
   E=d.events;group();
-  const mo=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],c=String(d.checked||"").split("-");
-  synced=c.length===3?mo[c[1]-1]+" "+(+c[2]):"";
-  render();
+  dataState="live";checkedISO=d.checked;removedList=Array.isArray(d.removed)?d.removed:[];
+  weekRanges();render();
   if($("sheet").classList.contains("open"))closeSheet();
-}).catch(()=>{});
+}).catch(()=>{dataState="builtin";render()})
+  .finally(()=>{freshness();changesBar();applySharedParams()});
 </script>
 </body>
 </html>
