@@ -1,5 +1,5 @@
 {
- "checked": "2026-10-02",
+ "checked": "2026-10-03",
  "source": "https://frc-events.firstinspires.org/2027/Events/EventList",
  "events": [
   {
@@ -566,7 +566,7 @@
    "week": 5,
    "dates": "Mar 31–Apr 3",
    "cap": 22,
-   "venue": "STEMIA",
+   "venue": "STEM Innovation Academy",
    "lat": 51.08676,
    "lng": -114.13749,
    "precise": true,
