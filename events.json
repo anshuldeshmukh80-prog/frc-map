@@ -1,5 +1,5 @@
 {
- "checked": "2026-10-20",
+ "checked": "2026-10-21",
  "source": "https://frc-events.firstinspires.org/2027/Events/EventList",
  "events": [
   {
@@ -730,7 +730,7 @@
    "country": "Netherlands",
    "week": 5,
    "dates": "Mar 31–Apr 3",
-   "cap": 26,
+   "cap": 22,
    "venue": "Indoor Sportcentrum Eindhoven",
    "lat": 51.4123,
    "lng": 5.48115,
