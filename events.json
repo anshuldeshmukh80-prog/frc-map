@@ -156,7 +156,7 @@
    "code": "CTTC",
    "name": "Taipei City Regional",
    "city": "Taipei City",
-   "st": "NWT",
+   "st": "TPE",
    "country": "Chinese Taipei",
    "week": 2,
    "dates": "Mar 11–14",
@@ -165,7 +165,7 @@
    "lat": 25.02161,
    "lng": 121.54552,
    "precise": true,
-   "addr": "No. 28, Ln. 76, Dunnan St, Taipei City, NWT Chinese Taipei"
+   "addr": "No. 28, Ln. 76, Dunnan St, Taipei City, TPE Chinese Taipei"
   },
   {
    "code": "MOSL",
@@ -550,7 +550,7 @@
    "country": "Türkiye",
    "week": 4,
    "dates": "Mar 26–28",
-   "cap": 47,
+   "cap": 48,
    "venue": "Türkiye Atletizm Federasyon Atletizm Salonu",
    "lat": 40.98722,
    "lng": 28.85543,
