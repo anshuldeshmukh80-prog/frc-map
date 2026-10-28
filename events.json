@@ -1,5 +1,5 @@
 {
- "checked": "2026-10-27",
+ "checked": "2026-10-28",
  "source": "https://frc-events.firstinspires.org/2027/Events/EventList",
  "events": [
   {
@@ -160,7 +160,7 @@
    "country": "Chinese Taipei",
    "week": 2,
    "dates": "Mar 11–14",
-   "cap": 31,
+   "cap": 33,
    "venue": "Taipei Heping Basketball Gymnasium",
    "lat": 25.02161,
    "lng": 121.54552,
@@ -250,7 +250,7 @@
    "country": "China",
    "week": 3,
    "dates": "Mar 18–21",
-   "cap": 32,
+   "cap": 33,
    "venue": "Nansha International Convention and Exhibition Center",
    "lat": 22.75333,
    "lng": 113.53326,
@@ -880,7 +880,7 @@
    "country": "USA",
    "week": 7,
    "dates": "Apr 15–18",
-   "cap": 44,
+   "cap": 45,
    "venue": "Alfred Lawson Jr Multipurpose Center - Florida A&M University",
    "lat": 30.42424,
    "lng": -84.29054,
