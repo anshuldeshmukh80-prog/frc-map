@@ -1,5 +1,5 @@
 {
- "checked": "2026-11-13",
+ "checked": "2026-11-14",
  "source": "https://frc-events.firstinspires.org/2027/Events/EventList",
  "events": [
   {
@@ -310,7 +310,7 @@
    "country": "USA",
    "week": 3,
    "dates": "Mar 17–20",
-   "cap": 35,
+   "cap": 36,
    "venue": "Mill Valley High School",
    "lat": 39.01995,
    "lng": -94.8406,
@@ -340,7 +340,7 @@
    "country": "Mexico",
    "week": 3,
    "dates": "Mar 17–20",
-   "cap": 28,
+   "cap": 29,
    "venue": "Tecnologico de Monterrey Auditorium",
    "lat": 25.51561,
    "lng": -103.39803,
@@ -625,7 +625,7 @@
    "country": "USA",
    "week": 5,
    "dates": "Mar 31–Apr 3",
-   "cap": 52,
+   "cap": 53,
    "venue": "Alario Center",
    "lat": 29.90547,
    "lng": -90.16279,
@@ -850,7 +850,7 @@
    "country": "Canada",
    "week": 6,
    "dates": "Apr 7–10",
-   "cap": 32,
+   "cap": 33,
    "venue": "Bombardier",
    "lat": 45.47511,
    "lng": -73.72912,
