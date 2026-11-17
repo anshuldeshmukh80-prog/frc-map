@@ -1,5 +1,5 @@
 {
- "checked": "2026-11-16",
+ "checked": "2026-11-17",
  "source": "https://frc-events.firstinspires.org/2027/Events/EventList",
  "events": [
   {
@@ -340,7 +340,7 @@
    "country": "Mexico",
    "week": 3,
    "dates": "Mar 17–20",
-   "cap": 29,
+   "cap": 31,
    "venue": "Tecnologico de Monterrey Auditorium",
    "lat": 25.51561,
    "lng": -103.39803,
@@ -625,7 +625,7 @@
    "country": "USA",
    "week": 5,
    "dates": "Mar 31–Apr 3",
-   "cap": 54,
+   "cap": 55,
    "venue": "Alario Center",
    "lat": 29.90547,
    "lng": -90.16279,
@@ -715,7 +715,7 @@
    "country": "Türkiye",
    "week": 5,
    "dates": "Apr 2–4",
-   "cap": 52,
+   "cap": 53,
    "venue": "Türkiye Atletizm Federasyonu Atletizim Salonu",
    "lat": 40.98722,
    "lng": 28.85543,
