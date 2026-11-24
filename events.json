@@ -1,5 +1,5 @@
 {
- "checked": "2026-11-23",
+ "checked": "2026-11-24",
  "source": "https://frc-events.firstinspires.org/2027/Events/EventList",
  "events": [
   {
@@ -265,7 +265,7 @@
    "country": "USA",
    "week": 3,
    "dates": "Mar 17–20",
-   "cap": 54,
+   "cap": 55,
    "venue": "Addition Financial Arena at the University of Central Florida",
    "lat": 28.60734,
    "lng": -81.1973,
@@ -340,7 +340,7 @@
    "country": "Mexico",
    "week": 3,
    "dates": "Mar 17–20",
-   "cap": 33,
+   "cap": 34,
    "venue": "Tecnologico de Monterrey Auditorium",
    "lat": 25.51561,
    "lng": -103.39803,
@@ -610,7 +610,7 @@
    "country": "USA",
    "week": 5,
    "dates": "Mar 31–Apr 3",
-   "cap": 45,
+   "cap": 48,
    "venue": "Palm Beach Convention Center",
    "lat": 26.7048,
    "lng": -80.05882,
