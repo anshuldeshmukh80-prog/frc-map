@@ -1,5 +1,5 @@
 {
- "checked": "2026-11-25",
+ "checked": "2026-11-26",
  "source": "https://frc-events.firstinspires.org/2027/Events/EventList",
  "events": [
   {
@@ -850,7 +850,7 @@
    "country": "Canada",
    "week": 6,
    "dates": "Apr 7–10",
-   "cap": 35,
+   "cap": 40,
    "venue": "Bombardier",
    "lat": 45.47511,
    "lng": -73.72912,
